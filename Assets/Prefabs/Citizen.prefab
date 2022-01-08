@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5293739977882116952}
   - component: {fileID: 5293739977882116954}
   - component: {fileID: 5293739977882116955}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DirectionShower
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -96,7 +96,13 @@ GameObject:
   - component: {fileID: 122383490016550169}
   - component: {fileID: 7140250837666833602}
   - component: {fileID: 8950527122529765466}
-  m_Layer: 9
+  - component: {fileID: 1394619079}
+  - component: {fileID: 1394619080}
+  - component: {fileID: 1394619081}
+  - component: {fileID: 1394619082}
+  - component: {fileID: 1394619083}
+  - component: {fileID: 1394619084}
+  m_Layer: 6
   m_Name: Citizen
   m_TagString: Citizen
   m_Icon: {fileID: 0}
@@ -209,9 +215,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0071b08f062775f43b8350b8f8912587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minLinearSpeed: 0.5
+  minLinearSpeed: 0
   maxLinearSpeed: 5
-  maxAngularSpeed: 5
+  maxAngularSpeed: 10
+  fieldOfView: 2
+  behaviourGroups:
+  - keys:
+    - {fileID: 1394619083}
+    values:
+    - 1
+  - keys:
+    - {fileID: 1394619079}
+    - {fileID: 1394619080}
+    - {fileID: 1394619081}
+    values:
+    - 1
+    - 1
+    - 1
+  - keys:
+    - {fileID: 1394619084}
+    values:
+    - 1
+  - keys:
+    - {fileID: 1394619082}
+    values:
+    - 1
 --- !u!65 &8950527122529765466
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -225,3 +253,87 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1394619079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c0a984a341f3340b4da32a7d83d3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1394619080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b273bec1c520d44bad70cc399272aeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1394619081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ce807b07d320645833f40a4009245f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1394619082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b56affa7cb8f9674c891aa48af17b1b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linearDrag: 3
+  angularDrag: 2
+--- !u!114 &1394619083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aef1cae4e6fe3940bc5f6d266b43cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sightRange: 5
+  sightAngle: 60
+  steer: 20
+  backpedal: 10
+--- !u!114 &1394619084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293739977919208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeaf3f7c9fa39a040a06b33b634d7890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {fileID: 0}
+  gas: 3
+  steer: 30
+  brake: 10
+  brakeAt: 4
+  stopAt: 1

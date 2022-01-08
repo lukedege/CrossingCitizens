@@ -21,21 +21,58 @@ public class DelegatedSteeringEditor : Editor
 
         EditorGUILayout.LabelField("Steering behaviour weights", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Refresh"))
+        if (GUILayout.Button("Reset"))
         {
-            agent.weightedBehaviours.Clear();
+            agent.behaviourGroups.Clear();
             agent.LoadBehaviours();
         }
 
         EditorGUILayout.EndHorizontal();
 
-        // Update weighs from slider values
-        var oldBhvrWeights = new Dictionary<SteeringBehaviour, float>(agent.weightedBehaviours); 
-
-        foreach (var bhvr in oldBhvrWeights)
+        // Update groups
+        var oldBhvrGroups = new List<Dictionary<SteeringBehaviour, float>>(); // saving the old one for display while calculating the new values for the next iteration
+        foreach (var bhvrGroup in agent.behaviourGroups)
         {
-            agent.weightedBehaviours[bhvr.Key] = EditorGUILayout.Slider(bhvr.Key.GetType().Name, bhvr.Value, 0, 1f);
+            oldBhvrGroups.Add(new Dictionary<SteeringBehaviour, float>(bhvrGroup));
         }
+
+        int currGroup = 0, newGroup = 0;
+        foreach (var bhvrGroup in oldBhvrGroups)
+        {
+            if (bhvrGroup.Count == 0)
+            {
+                agent.behaviourGroups.RemoveAt(currGroup);
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Group " + currGroup + ":", EditorStyles.boldLabel);
+                foreach (var bhvr in bhvrGroup)
+                {
+                    EditorGUILayout.BeginHorizontal();
+
+                    agent.behaviourGroups[currGroup][bhvr.Key] = EditorGUILayout.Slider(bhvr.Key.GetType().Name, bhvr.Value, 0, 1f);
+
+                    EditorGUILayout.LabelField("Group", GUILayout.Width(50));
+
+                    newGroup = EditorGUILayout.DelayedIntField(currGroup, GUILayout.Width(20));
+                    if (newGroup != currGroup)
+                    {
+                        if (newGroup >= agent.behaviourGroups.Count)
+                        {
+                            newGroup = agent.behaviourGroups.Count;
+                            agent.behaviourGroups.Add(new WeightedBehaviours());
+                        }
+                        agent.behaviourGroups[newGroup].Add(bhvr.Key, bhvr.Value);
+                        agent.behaviourGroups[currGroup].Remove(bhvr.Key);
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+                currGroup++;
+            }
+
+        }
+
     }
 
     public static void DrawUILine(Color color, int thickness = 1, int padding = 10)

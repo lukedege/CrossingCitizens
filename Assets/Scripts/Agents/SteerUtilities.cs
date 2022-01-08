@@ -10,12 +10,16 @@ public class MovementStatus {
 	public Vector3 direction;
 	public float linearSpeed;
 	public float angularSpeed;
+	public Collider[] neighbours;
+	public int neighboursCount;
 }
 
 // To be extended by all movement behaviours
 public abstract class SteeringBehaviour : MonoBehaviour {
 	public abstract Vector3 GetAcceleration (MovementStatus status);
 }
+
+[Serializable] public class WeightedBehaviours : SerializableDictionary<SteeringBehaviour, float> { }
 
 public class Blender {
 	public static Vector3 Blend (List<Vector3> vl) {
