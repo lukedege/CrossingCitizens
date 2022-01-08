@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (Rigidbody))]
@@ -10,9 +11,24 @@ public class DelegatedSteering : MonoBehaviour {
 	public float maxAngularSpeed = 5f;
 
 	private MovementStatus status;
+	public Dictionary<SteeringBehaviour, float> weightedBehaviours = new Dictionary<SteeringBehaviour, float>();
 
 	private void Start () {
 		status = new MovementStatus ();
+	}
+
+	private void OnValidate()
+	{
+		LoadBehaviours();
+	}
+
+	public void LoadBehaviours()
+	{
+		foreach (SteeringBehaviour bc in GetComponents<SteeringBehaviour>())
+		{
+			if (!weightedBehaviours.ContainsKey(bc))
+				weightedBehaviours.Add(bc, 1f);
+		}
 	}
 
 	void FixedUpdate () 
@@ -21,16 +37,16 @@ public class DelegatedSteering : MonoBehaviour {
 		status.direction = transform.forward;
 		status.position = transform.position;
 
-		// Contact al behaviours and build a list of directions
+		// Contact all behaviours and build a list of directions
 		List<Vector3> components = new List<Vector3> ();
-		foreach (SteeringBehaviour mb in GetComponents<SteeringBehaviour> ())
-			components.Add (mb.GetAcceleration (status));
+		foreach (SteeringBehaviour bhvr in weightedBehaviours.Keys)
+			components.Add (bhvr.GetAcceleration(status) * weightedBehaviours[bhvr]);
 
 		// Blend the list to obtain a single acceleration to apply
 		Vector3 blendedAcceleration = Blender.Blend (components);
 
 		// if we have an acceleration, apply it
-		if (blendedAcceleration.magnitude != 0f) {
+		if (blendedAcceleration.magnitude > 0.01f) {
 			Driver.Steer (GetComponent<Rigidbody> (), status, blendedAcceleration,
 				          minLinearSpeed, maxLinearSpeed, maxAngularSpeed);
 		}
