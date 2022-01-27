@@ -22,12 +22,16 @@ public class AvoidBehaviourVO : SteeringBehaviour
 			Vector3 neighPosition = neighStatus.position;
 			Vector3 neighVelocity = neighStatus.linearSpeed * neighStatus.direction;
 			Vector3 toNeighbour = neighPosition - ownPosition;
-
+			
 			// calculate VO boundaries (we assume both agents have the same dimension)
 			Vector3 boundaryLeft = 2 * (toNeighbour) + (agentSize / 2); // TODO approssimazione erronea, serve la tangente
 			Vector3 boundaryRight = 2 * (toNeighbour - ownPosition) - (agentSize / 2); // TODO approssimazione erronea, serve la tangente
 
-			float boundaryAngle = 0; // find tangent angle between boundaries (BETTER SOLUTION THAN TANGENTS)
+			// calculate the length of the line tangent by using Pythagora
+			float tangentLineLength = Mathf.Sqrt(toNeighbour.magnitude * toNeighbour.magnitude - agentSize.magnitude * agentSize.magnitude);
+			
+			// calculate the angle of the tangent (multiplied by 2 since we consider both sides)
+			float boundaryAngle = 2 * Mathf.Atan2(agentSize.magnitude, tangentLineLength);
 
 			// find the relative velocity 
 			Vector3 relVel = ownVelocity - neighVelocity;
