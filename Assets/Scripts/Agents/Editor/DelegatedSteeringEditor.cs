@@ -54,7 +54,7 @@ public class DelegatedSteeringEditor : Editor
 
                     EditorGUILayout.LabelField("Group", GUILayout.Width(50));
 
-                    newGroup = EditorGUILayout.DelayedIntField(currGroup, GUILayout.Width(20));
+                    newGroup = EditorGUILayout.IntField(currGroup, GUILayout.Width(20));
                     if (newGroup != currGroup)
                     {
                         if (newGroup >= agent.behaviourGroups.Count)

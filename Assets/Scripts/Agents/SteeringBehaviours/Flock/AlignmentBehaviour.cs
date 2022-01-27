@@ -12,7 +12,7 @@ public class AlignmentBehaviour : SteeringBehaviour
         // elements direction
         for (int i = 0; i < status.neighboursCount; i++)
         {
-            // if the neighbour is a boid and of the same flock
+            // if the neighbour is a citizen 
             if (status.neighbours[i].gameObject.layer == gameObject.layer)
                 alignment += status.neighbours[i].gameObject.transform.forward;
         }

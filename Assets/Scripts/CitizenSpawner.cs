@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CitizenSpawner : MonoBehaviour
 {
@@ -8,18 +9,21 @@ public class CitizenSpawner : MonoBehaviour
     public GameObject template;
     public int amount = 50;
     public float range = 50;
+    public GameObject destination; //TEMPORARY
 
     void Start()
     {
         for (int i = 0; i < amount; i++)
         {
             // Set initial position and rotation
-            Vector3 spawnPosition = Utilities.GenerateValidPosition(transform.position, range);
-            spawnPosition.y = template.transform.localScale.y; // Flattening
-            Vector3 spawnRotation = new Vector3(0, UnityEngine.Random.value, 0) * 360;
+            Vector3 spawnPosition = Utilities.GenerateValidPosition(transform.position, range, template.transform.localScale.y, template.transform.localScale);
+            Quaternion spawnRotation = transform.rotation;
 
             // Generate instance
-            GameObject boidInstance = Instantiate(template, spawnPosition, Quaternion.Euler(spawnRotation));
+
+            GameObject boidInstance = Instantiate(template, spawnPosition, spawnRotation);
+            boidInstance.GetComponent<SeekBehaviour>().destination = destination.transform;
+            //boidInstance.GetComponent<NavMeshAgent>().destination = destination.transform.position;
         }
     }
 }

@@ -13,12 +13,10 @@ GameObject:
   - component: {fileID: 1784401132642477587}
   - component: {fileID: 5175920315599805023}
   - component: {fileID: 1654729718871703066}
-  - component: {fileID: 7428189320222264139}
-  - component: {fileID: 7614496899000876990}
-  - component: {fileID: 6583059207257990150}
-  - component: {fileID: 2794450381228755019}
+  - component: {fileID: 4349244325411366612}
+  - component: {fileID: 8026422052857128232}
   m_Layer: 6
-  m_Name: Citizen
+  m_Name: CitizenNMA
   m_TagString: Citizen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25c6db7a6e57d234da69a9babb737153, type: 2}
+  - {fileID: 2100000, guid: 74687dfbce508714d93a68f3a9683f4e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,7 +95,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 4362129294603291633}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -116,84 +114,43 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7428189320222264139
-MonoBehaviour:
+--- !u!65 &4349244325411366612
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362129294603291633}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!195 &8026422052857128232
+NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362129294603291633}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0071b08f062775f43b8350b8f8912587, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minLinearSpeed: 0
-  maxLinearSpeed: 2
-  maxAngularSpeed: 20
-  fieldOfView: 0.75
-  showDebugGizmos: 1
-  behaviourGroups:
-  - keys:
-    - {fileID: 7614496899000876990}
-    - {fileID: 6583059207257990150}
-    - {fileID: 2794450381228755019}
-    values:
-    - 1
-    - 1
-    - 0.522
---- !u!114 &7614496899000876990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1ce807b07d320645833f40a4009245f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6583059207257990150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeaf3f7c9fa39a040a06b33b634d7890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destination: {fileID: 0}
-  gas: 2
-  steer: 30
-  brake: 1
-  brakeAt: 4
-  stopAt: 0.2
---- !u!114 &2794450381228755019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aef1cae4e6fe3940bc5f6d266b43cbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sightRange: 2
-  sightAngle: 15
-  steer: 25
-  backpedal: 0
-  raycastVerticalOffset: 0
-  leftWhisker: 1
-  midWhisker: 1
-  rightWhisker: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5938855656022121770
 GameObject:
   m_ObjectHideFlags: 0

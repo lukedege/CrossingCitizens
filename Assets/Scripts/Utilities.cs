@@ -6,13 +6,31 @@ using UnityEngine.AI;
 
 public static class Utilities
 {
-    // Generate a random valid position (aka onto the NavMesh) given a point and a range 
-    public static Vector3 GenerateValidPosition(Vector3 position, float range)
+    // Generate a random position at a certain height
+    public static Vector3 GenerateValidPosition(Vector3 position, float range, float height, Vector3 objectSize)
     {
-        return GenerateValidPosition(position, range, null);
+        Vector3 randomPosition;
+        do
+        {
+            randomPosition = GenerateRandomPoint(position, range);
+            randomPosition.y = height;
+        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")));
+
+        return randomPosition;
     }
 
-    public static Vector3 GenerateValidPosition(Vector3 position, float range, string areaName)
+    public static float MaxVector3Component(Vector3 v)
+    {
+        return Mathf.Max(Mathf.Max(v.x, v.y), v.z);
+    }
+
+    // Generate a random valid position (onto the NavMesh) given a point and a range 
+    public static Vector3 GenerateValidPositionOnNavMesh(Vector3 position, float range)
+    {
+        return GenerateValidPositionOnNavMesh(position, range, null);
+    }
+
+    public static Vector3 GenerateValidPositionOnNavMesh(Vector3 position, float range, string areaName)
     {
         Vector3 randomDestination;
         Vector3 validatedDestination;
