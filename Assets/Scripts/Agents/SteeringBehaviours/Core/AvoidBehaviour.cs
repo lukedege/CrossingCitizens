@@ -59,7 +59,7 @@ public class AvoidBehaviour : SteeringBehaviour
 	private void OnDrawGizmos()
 	{
 		Vector3 verticalAdj = transform.position + Vector3.up * raycastVerticalOffset;
-		Gizmos.color = Color.green;
+		Gizmos.color = Color.yellow;
 
 		if (leftWhisker)
 			Gizmos.DrawLine(verticalAdj, verticalAdj + Quaternion.Euler(0f, -sightAngle, 0f) * transform.forward * sightRange);

@@ -13,14 +13,9 @@ GameObject:
   - component: {fileID: 1784401132642477587}
   - component: {fileID: 5175920315599805023}
   - component: {fileID: 1654729718871703066}
-  - component: {fileID: -6303997449864867759}
-  - component: {fileID: 7428189320222264139}
-  - component: {fileID: 7614496899000876990}
-  - component: {fileID: 6583059207257990150}
-  - component: {fileID: -9127429392032004216}
-  - component: {fileID: 2923421552644850207}
+  - component: {fileID: -7220841019974807986}
   m_Layer: 6
-  m_Name: Citizen
+  m_Name: CitizenVO
   m_TagString: Citizen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25c6db7a6e57d234da69a9babb737153, type: 2}
+  - {fileID: 2100000, guid: da136967022d3e248a668cce58fb7373, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -120,7 +115,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &-6303997449864867759
+--- !u!114 &-7220841019974807986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,103 +124,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4362129294603291633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0facbc72e85f0554cb12bb0a0c942d6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 94504efac91ca2d439554be2e1bc802e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reactionTime: 0.2
-  base_destination: {fileID: 0}
---- !u!114 &7428189320222264139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0071b08f062775f43b8350b8f8912587, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minLinearSpeed: 0
-  maxLinearSpeed: 2
-  maxAngularSpeed: 270
-  fieldOfView: 3
-  showDebugGizmos: 1
-  behaviourGroups:
-  - keys:
-    - {fileID: 6583059207257990150}
-    - {fileID: 2923421552644850207}
-    - {fileID: 7614496899000876990}
-    - {fileID: -9127429392032004216}
-    values:
-    - 1
-    - 0.1
-    - 1
-    - 1
---- !u!114 &7614496899000876990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1ce807b07d320645833f40a4009245f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6583059207257990150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeaf3f7c9fa39a040a06b33b634d7890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
-  gas: 12
-  steer: 50
-  brake: 5
-  brakeAt: 1
-  stopAt: 0.5
---- !u!114 &-9127429392032004216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34867c291d3f9b24fbceaa665947db0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sightRange: 1
-  sightAngle: 45
-  steer: 15
-  backpedal: 1
-  boxcastVerticalOffset: 0
-  leftWhisker: 1
-  midWhisker: 1
-  rightWhisker: 1
---- !u!114 &2923421552644850207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b56affa7cb8f9674c891aa48af17b1b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linearDrag: 1
-  angularDrag: 1
 --- !u!1 &5938855656022121770
 GameObject:
   m_ObjectHideFlags: 0

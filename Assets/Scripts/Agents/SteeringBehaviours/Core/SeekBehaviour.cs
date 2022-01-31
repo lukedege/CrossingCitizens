@@ -3,7 +3,7 @@
 public class SeekBehaviour : SteeringBehaviour 
 {
 
-	public Transform destination;
+	public Vector3 destination;
 
 	public float gas = 3f;
 	public float steer = 30f;
@@ -12,21 +12,30 @@ public class SeekBehaviour : SteeringBehaviour
 	public float brakeAt = 5f;
 	public float stopAt = 0.01f;
 
+	private Vector3 dbgAcceleration;
+
 	public override Vector3 GetAcceleration (MovementStatus status) {
-		if (destination != null) {
-			Vector3 verticalAdj = new Vector3 (destination.position.x, transform.position.y, destination.position.z);
+		Vector3 acceleration = Vector3.zero;
+		if (destination != null)
+		{
+			Vector3 verticalAdj = new Vector3(destination.x, transform.position.y, destination.z);
 			Vector3 toDestination = (verticalAdj - transform.position);
 
-			if (toDestination.magnitude > stopAt) {
-				Vector3 tangentComponent = Vector3.Project (toDestination.normalized, status.direction);
+			if (toDestination.magnitude > stopAt)
+			{
+				Vector3 tangentComponent = Vector3.Project(toDestination.normalized, status.direction);
 				Vector3 normalComponent = (toDestination.normalized - tangentComponent);
-				return (tangentComponent * (toDestination.magnitude > brakeAt ? gas : -brake)) + (normalComponent * steer);
-			} else {
-				return Vector3.zero;
+				acceleration = (toDestination.normalized * (toDestination.magnitude > brakeAt ? gas : -brake)) + (normalComponent * steer);
 			}
-		} else {
-			return Vector3.zero;
 		}
+		dbgAcceleration = acceleration;
+		return acceleration;
+	}
+
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.green;
+		Gizmos.DrawLine(transform.position, transform.position + dbgAcceleration);
 	}
 }
 

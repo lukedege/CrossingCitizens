@@ -22,6 +22,9 @@ public class DelegatedSteering : MonoBehaviour {
 
 	private void Start () {
 		status = new MovementStatus ();
+
+		status.direction = transform.forward;
+		status.position = transform.position;
 	}
 
 	private void OnValidate()
@@ -43,6 +46,23 @@ public class DelegatedSteering : MonoBehaviour {
 		}
 	}
 
+	public void ChangeBehaviourWeight<T>(float newWeight) where T : SteeringBehaviour
+    {
+		newWeight = Mathf.Clamp01(newWeight);
+		SteeringBehaviour bhvrToChange = null;
+		foreach(var bhvrGroup in behaviourGroups)
+        {
+			foreach(var bhvr in bhvrGroup)
+            {
+				if (bhvr.Key.GetType() == typeof(T))
+					bhvrToChange = bhvr.Key;
+            }
+			if(bhvrToChange != null)
+				bhvrGroup[bhvrToChange] = newWeight;
+        }
+
+    }
+
 	void FixedUpdate () 
 	{
 		// Filling up and refresh MovementStatus info
@@ -52,7 +72,7 @@ public class DelegatedSteering : MonoBehaviour {
 
 		// disable myself to avoid flocking from myself :)
 		GetComponent<Collider>().enabled = false;
-		status.neighboursCount = Physics.OverlapSphereNonAlloc(transform.position, fieldOfView, status.neighbours, LayerMask.GetMask("Citizen"));
+		status.neighboursCount = Physics.OverlapSphereNonAlloc(transform.position, fieldOfView, status.neighbours, LayerMask.GetMask("Citizen","Obstacles"));
 		GetComponent<Collider>().enabled = true;
 
 		// Scan all groups in order
@@ -75,7 +95,7 @@ public class DelegatedSteering : MonoBehaviour {
 		}
 
 		// if we have an acceleration, apply it
-		if (blendedAcceleration.magnitude > 0.001f)
+		if (blendedAcceleration.magnitude > 0.1f)
 		{
 			Driver.DynamicSteer (GetComponent<Rigidbody> (), status, blendedAcceleration, minLinearSpeed, maxLinearSpeed, maxAngularSpeed);
 			//Driver.KinematicSteer(transform, status, blendedAcceleration, minLinearSpeed, maxLinearSpeed, maxAngularSpeed);
@@ -87,6 +107,8 @@ public class DelegatedSteering : MonoBehaviour {
 			UnityEditor.Handles.Label (transform.position + 2f * transform.up, status.linearSpeed.ToString () + "\n" + status.angularSpeed.ToString ()
 				+ "\n" + currBhvrGroup);
 			UnityEditor.Handles.DrawWireDisc(transform.position, transform.up, fieldOfView);
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawLine(status.position, status.position + status.linearSpeed * status.direction * 10);
 		}
 	}
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SeparationBehaviour : SteeringBehaviour
 {
+    private Vector3 dbgAcceleration;
+
     public override Vector3 GetAcceleration(MovementStatus status)
     {
         Vector3 separation = Vector3.zero;
@@ -20,9 +22,15 @@ public class SeparationBehaviour : SteeringBehaviour
             separation += distanceFrom.normalized / (distanceFrom.magnitude + 0.0001f);
 
         }
-        // normalize and weigh
-        separation = separation.normalized * 10f;
+        separation *= 1;
+        dbgAcceleration = separation;
 
         return separation;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + dbgAcceleration);
     }
 }

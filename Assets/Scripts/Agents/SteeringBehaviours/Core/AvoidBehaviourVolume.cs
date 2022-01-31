@@ -57,7 +57,7 @@ public class AvoidBehaviourVolume : SteeringBehaviour
 		} else if (leftHit && midHit && !rightHit) {
 			return right * steer * 2f;
 		} else if (leftHit && midHit && rightHit) {
-			return -status.direction.normalized * backpedal;
+			return right * steer * 2f; //-status.direction.normalized * backpedal;
 		} else if (!leftHit && midHit && rightHit) {
 			return -right * steer * 2f;
 		} else if (!leftHit && !midHit && rightHit) {

@@ -22,7 +22,9 @@ public class CitizenSpawner : MonoBehaviour
             // Generate instance
 
             GameObject boidInstance = Instantiate(template, spawnPosition, spawnRotation);
-            boidInstance.GetComponent<SeekBehaviour>().destination = destination.transform;
+
+            boidInstance.GetComponent<Crosser>().base_destination = destination.transform;
+            //boidInstance.GetComponent<SeekBehaviour>().destination = destination.transform.position;
             //boidInstance.GetComponent<NavMeshAgent>().destination = destination.transform.position;
         }
     }

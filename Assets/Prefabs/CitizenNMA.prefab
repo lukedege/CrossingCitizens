@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1784401132642477587}
   - component: {fileID: 5175920315599805023}
   - component: {fileID: 1654729718871703066}
-  - component: {fileID: 4349244325411366612}
   - component: {fileID: 8026422052857128232}
   m_Layer: 6
   m_Name: CitizenNMA
@@ -95,7 +94,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 4362129294603291633}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
@@ -114,21 +113,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
---- !u!65 &4349244325411366612
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!195 &8026422052857128232
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -138,7 +124,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4362129294603291633}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.75
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -150,7 +136,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 1
 --- !u!1 &5938855656022121770
 GameObject:
   m_ObjectHideFlags: 0
