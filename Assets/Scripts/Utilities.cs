@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public static class Utilities
 {
-    // Generate a random position at a certain height
+    // Generate a random position at a certain "height" in a sphere of radius "range"
     public static Vector3 GenerateValidPosition(Vector3 position, float range, float height, Vector3 objectSize)
     {
         Vector3 randomPosition;
@@ -14,6 +14,23 @@ public static class Utilities
         {
             randomPosition = GenerateRandomPoint(position, range);
             randomPosition.y = height;
+        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")));
+
+        return randomPosition;
+    }
+
+    // Generate a random position at a certain "height" in a capsule with a certain radius and a certain height along a certain direction
+    public static Vector3 GenerateValidPositionCapsule(Vector3 position, float height, Vector3 objectSize, float capsRadius, float capsHeight, Vector3 direction)
+    {
+        Vector3 randomPosition, a, b;
+        float alpha = UnityEngine.Random.value;
+        do
+        {
+            // Generate two random points in two spheres of capsRadius at capsHeight distance and lerp between these points
+            a = GenerateRandomPoint(position - direction.normalized * capsHeight, capsRadius);
+            b = GenerateRandomPoint(position + direction.normalized * capsHeight, capsRadius);
+            a.y = b.y = height;
+            randomPosition = Vector3.Lerp(a, b, alpha);
         } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")));
 
         return randomPosition;

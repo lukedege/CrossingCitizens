@@ -108,7 +108,7 @@ public class DelegatedSteering : MonoBehaviour {
 				+ "\n" + currBhvrGroup);
 			UnityEditor.Handles.DrawWireDisc(transform.position, transform.up, fieldOfView);
 			Gizmos.color = Color.magenta;
-			Gizmos.DrawLine(status.position, status.position + status.linearSpeed * status.direction * 10);
+			Gizmos.DrawLine(status.position, status.position + status.linearSpeed * status.direction * 3);
 		}
 	}
 

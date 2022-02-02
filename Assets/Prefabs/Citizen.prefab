@@ -17,8 +17,8 @@ GameObject:
   - component: {fileID: 7428189320222264139}
   - component: {fileID: 7614496899000876990}
   - component: {fileID: 6583059207257990150}
-  - component: {fileID: -9127429392032004216}
   - component: {fileID: 2923421552644850207}
+  - component: {fileID: 8575706212775592472}
   m_Layer: 6
   m_Name: Citizen
   m_TagString: Citizen
@@ -148,18 +148,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minLinearSpeed: 0
   maxLinearSpeed: 2
-  maxAngularSpeed: 270
-  fieldOfView: 3
+  maxAngularSpeed: 180
+  fieldOfView: 4
   showDebugGizmos: 1
   behaviourGroups:
   - keys:
-    - {fileID: 6583059207257990150}
     - {fileID: 2923421552644850207}
+    - {fileID: 6583059207257990150}
     - {fileID: 7614496899000876990}
-    - {fileID: -9127429392032004216}
+    - {fileID: 8575706212775592472}
     values:
+    - 0.2
     - 1
-    - 0.1
     - 1
     - 1
 --- !u!114 &7614496899000876990
@@ -188,30 +188,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
   gas: 12
-  steer: 50
-  brake: 5
-  brakeAt: 1
-  stopAt: 0.5
---- !u!114 &-9127429392032004216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362129294603291633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34867c291d3f9b24fbceaa665947db0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sightRange: 1
-  sightAngle: 45
-  steer: 15
-  backpedal: 1
-  boxcastVerticalOffset: 0
-  leftWhisker: 1
-  midWhisker: 1
-  rightWhisker: 1
+  steer: 60
+  brake: 1
+  brakeAt: 0.3
+  stopAt: 0
 --- !u!114 &2923421552644850207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +206,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linearDrag: 1
   angularDrag: 1
+--- !u!114 &8575706212775592472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362129294603291633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aef1cae4e6fe3940bc5f6d266b43cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sightRange: 1
+  sightAngle: 45
+  steer: 15
+  backpedal: 1
+  raycastVerticalOffset: 0
+  leftWhisker: 1
+  midWhisker: 1
+  rightWhisker: 1
 --- !u!1 &5938855656022121770
 GameObject:
   m_ObjectHideFlags: 0

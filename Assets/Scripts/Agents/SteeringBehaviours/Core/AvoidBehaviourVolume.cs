@@ -17,8 +17,11 @@ public class AvoidBehaviourVolume : SteeringBehaviour
 	public bool midWhisker = true;
 	public bool rightWhisker = true;
 
-	public override Vector3 GetAcceleration (MovementStatus status) {
+	private Vector3 dbgAcceleration;
 
+	public override Vector3 GetAcceleration (MovementStatus status) 
+	{
+		Vector3 acceleration = Vector3.zero;
 		Collider collider = GetComponent<Collider> ();
 		Vector3 verticalAdj = transform.position + Vector3.up * boxcastVerticalOffset;
 		bool leftHit = false, midHit = false, rightHit = false;
@@ -53,20 +56,23 @@ public class AvoidBehaviourVolume : SteeringBehaviour
 		Vector3 right = Quaternion.Euler (0f, 90f, 0f) * status.direction.normalized;
 
 		if (leftHit && !midHit && !rightHit) {
-			return right * steer;
+			acceleration = right * steer;
 		} else if (leftHit && midHit && !rightHit) {
-			return right * steer * 2f;
+			acceleration = right * steer * 2f;
 		} else if (leftHit && midHit && rightHit) {
-			return right * steer * 2f; //-status.direction.normalized * backpedal;
+			acceleration = Vector3.zero;//right * steer * 2f; //-status.direction.normalized * backpedal;
 		} else if (!leftHit && midHit && rightHit) {
-			return -right * steer * 2f;
+			acceleration = -right * steer * 2f;
 		} else if (!leftHit && !midHit && rightHit) {
-			return -right * steer;
+			acceleration = -right * steer;
 		} else if (!leftHit && midHit && !rightHit) {
-			return right * steer;
+			acceleration = right * steer;
 		}
 
-		return Vector3.zero;
+		dbgAcceleration = acceleration;
+		Debug.Log(acceleration);
+
+		return acceleration;
 	}
 
 	private void OnDrawGizmos()
@@ -89,5 +95,8 @@ public class AvoidBehaviourVolume : SteeringBehaviour
 			Gizmos.DrawCube(verticalAdj + Quaternion.Euler(0f, sightAngle, 0f) * transform.forward * sightRange, Vector3.one / 4);
 			Gizmos.DrawLine(verticalAdj, verticalAdj + Quaternion.Euler(0f, sightAngle, 0f) * transform.forward * sightRange);
 		}
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(verticalAdj, verticalAdj + dbgAcceleration);
+
 	}
 }

@@ -16,8 +16,11 @@ public class AvoidBehaviour : SteeringBehaviour
 	public bool midWhisker = true;
 	public bool rightWhisker = true;
 
+	private Vector3 dbgAcceleration;
+
 	public override Vector3 GetAcceleration (MovementStatus status) 
 	{
+		Vector3 acceleration = Vector3.zero;
 		Vector3 verticalAdj = transform.position + Vector3.up * raycastVerticalOffset;
 		bool leftHit = false, midHit = false, rightHit = false;
 		float lateralSightRange = sightRange;
@@ -32,19 +35,22 @@ public class AvoidBehaviour : SteeringBehaviour
 		Vector3 right = Quaternion.Euler (0f, 90f, 0f) * status.direction.normalized;
 
 		if (leftHit && !midHit && !rightHit) {
-			return right * steer;
+			acceleration = right * steer;
 		} else if (leftHit && midHit && !rightHit) {
-			return right * steer * 2f;
+			acceleration = right * steer * 2f;
 		} else if (leftHit && midHit && rightHit) {
-			return -status.direction.normalized * backpedal;
+			acceleration = -status.direction.normalized * backpedal;
 		} else if (!leftHit && midHit && rightHit) {
-			return -right * steer * 2f;
+			acceleration = -right * steer * 2f;
 		} else if (!leftHit && !midHit && rightHit) {
-			return -right * steer;
+			acceleration = -right * steer;
 		} else if (!leftHit && midHit && !rightHit) {
-			return right * steer;
+			acceleration = right * steer;
 		}
-		return Vector3.zero;
+
+		dbgAcceleration = acceleration;
+
+		return acceleration;
 	}
 
 
@@ -59,7 +65,7 @@ public class AvoidBehaviour : SteeringBehaviour
 	private void OnDrawGizmos()
 	{
 		Vector3 verticalAdj = transform.position + Vector3.up * raycastVerticalOffset;
-		Gizmos.color = Color.yellow;
+		Gizmos.color = new Color(0, 255, 0, 0.5f);
 
 		if (leftWhisker)
 			Gizmos.DrawLine(verticalAdj, verticalAdj + Quaternion.Euler(0f, -sightAngle, 0f) * transform.forward * sightRange);
@@ -67,5 +73,8 @@ public class AvoidBehaviour : SteeringBehaviour
 			Gizmos.DrawLine(verticalAdj, verticalAdj + transform.forward * sightRange);
 		if (rightWhisker)
 			Gizmos.DrawLine(verticalAdj, verticalAdj + Quaternion.Euler(0f, sightAngle, 0f) * transform.forward * sightRange);
+
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(verticalAdj, verticalAdj + dbgAcceleration);
 	}
 }

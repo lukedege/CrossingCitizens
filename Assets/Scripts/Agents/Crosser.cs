@@ -12,13 +12,14 @@ public class Crosser : MonoBehaviour
 
     private Vector3 prev_destination;
     private Vector3 start_position;
-    private Vector3 crossing_checkpoint;
+    private Vector3 first_crossing_checkpoint;
+    private Vector3 second_crossing_checkpoint;
 
     private SeekBehaviour seekBhvr;
     private DelegatedSteering steering;
 
     private GameObject[] semaphores;
-    private GameObject crossing;
+    private Collider crossing;
 
     private DecisionTree dt;
 
@@ -29,11 +30,14 @@ public class Crosser : MonoBehaviour
         seekBhvr = GetComponent<SeekBehaviour>();
         steering = GetComponent<DelegatedSteering>();
 
-        NewDestination();
+        
 
         semaphores = GameObject.FindGameObjectsWithTag("Semaphore");
-        crossing = GameObject.FindGameObjectWithTag("Crossing");
-        crossing_checkpoint = crossing.transform.GetChild(0).GetComponent<Collider>().bounds.ClosestPoint(start_position);
+        crossing = GameObject.FindGameObjectWithTag("Crossing").transform.GetChild(0).GetComponent<Collider>();
+        first_crossing_checkpoint = crossing.bounds.ClosestPoint(start_position);
+
+        NewDestination();
+        
 
         InitDT();
         StartCoroutine(Wander());
@@ -46,80 +50,55 @@ public class Crosser : MonoBehaviour
     void InitDT()
     {
         // Define actions
-        DTAction walk = new DTAction(Walk);
+        DTAction despawn = new DTAction(Despawn);
+        DTAction arrive = new DTAction(Arrive);
+        DTAction approach = new DTAction(Approach);
+        DTAction cross = new DTAction(Cross);
         DTAction hasten = new DTAction(Hasten);
         DTAction run = new DTAction(Run);
+        DTAction turn = new DTAction(Turn);
         DTAction wait = new DTAction(Wait);
-        DTAction despawn = new DTAction(Despawn);
-        DTAction resume = new DTAction(Resume);
 
         // Define decisions
-        DTDecision d1 = new DTDecision(IsNearCrossing);
-        DTDecision d2 = new DTDecision(IsGoalReached);
-        DTDecision d3 = new DTDecision(IsSemaphoreGreen);
-        DTDecision d4 = new DTDecision(IsSemaphoreYellow);
-        DTDecision d5 = new DTDecision(IsHalfCrossingPassed);
+        DTDecision hasCrossed = new DTDecision(HasCrossed);
+        DTDecision isGoalReached = new DTDecision(IsGoalReached);
+        DTDecision isNearCrossing = new DTDecision(IsNearCrossing);
+        DTDecision isGreen = new DTDecision(IsSemaphoreGreen);
+        DTDecision isYellow = new DTDecision(IsSemaphoreYellow);
+        DTDecision isHalfPassed = new DTDecision(IsHalfCrossingPassed);
+        DTDecision isBeforeCrossing = new DTDecision(IsBeforeCrossing);
 
 
         // Link action with decisions
-        d1.AddLink(true, d3);
-        d1.AddLink(false, d2);
+        hasCrossed.AddLink(true, isGoalReached);
+        hasCrossed.AddLink(false, isNearCrossing);
 
-        d2.AddLink(true, despawn);
-        d2.AddLink(false, resume);
+        isGoalReached.AddLink(true, despawn);
+        isGoalReached.AddLink(false, arrive);
 
-        d3.AddLink(true, resume);
-        d3.AddLink(false, d4);
+        isNearCrossing.AddLink(true, isGreen);
+        isNearCrossing.AddLink(false, approach);
 
-        d4.AddLink(true, hasten);
-        d4.AddLink(false, d5);
+        isGreen.AddLink(true, cross);
+        isGreen.AddLink(false, isYellow);
 
-        d5.AddLink(true, run);
-        d5.AddLink(false, wait);
+        isYellow.AddLink(true, hasten);
+        isYellow.AddLink(false, isHalfPassed);
 
-        dt = new DecisionTree(d1);
+        isHalfPassed.AddLink(true, run);
+        isHalfPassed.AddLink(false, isBeforeCrossing);
+
+        isBeforeCrossing.AddLink(true, wait);
+        isBeforeCrossing.AddLink(false, turn);
+
+        dt = new DecisionTree(hasCrossed);
     }
 
     // ACTIONS
-    public object Resume(object o)
-    {
-        seekBhvr.destination = destination;
-        steering.maxLinearSpeed = 2f;
-        steering.ChangeBehaviourWeight<AvoidBehaviourVolume>(1f);
-        steering.ChangeBehaviourWeight<SeparationBehaviour>(1f);
-        return null;
-    }
-
-    public object Walk(object o)
-    {
-        seekBhvr.destination = destination;
-        steering.maxLinearSpeed = 2f;
-        return null;
-    }
-
-    public object Hasten(object o)
-    {
-        steering.maxLinearSpeed = 3f;
-        return null;
-    }
-
-    public object Run(object o)
-    {
-        steering.maxLinearSpeed = 4f;
-        return null;
-    }
-
-    public object Wait(object o)
-    {
-        // TODO modella il tornare indietro
-        seekBhvr.destination = crossing_checkpoint;
-        steering.ChangeBehaviourWeight<AvoidBehaviourVolume>(0f);
-        steering.ChangeBehaviourWeight<SeparationBehaviour>(0f);
-        return null;
-    }
-
     public object Despawn(object o)
     {
+
+        Debug.Log("Despawn");
         Vector3 respawnPosition = Utilities.GenerateValidPosition(start_position, 2f, transform.localScale.y, transform.localScale);
         transform.position = respawnPosition;
 
@@ -127,30 +106,104 @@ public class Crosser : MonoBehaviour
         return null;
     }
 
+    public object Arrive(object o)
+    {
+        Debug.Log("Arrive");
+        seekBhvr.destination = destination;
+        steering.maxLinearSpeed = 2f;
+        return null;
+    }
+
+    public object Approach(object o)
+    {
+
+        Debug.Log("Approach");
+        seekBhvr.destination = first_crossing_checkpoint;
+        steering.maxLinearSpeed = 2f;
+        return null;
+    }
+
+    public object Cross(object o)
+    {
+        Debug.Log("Cross");
+        seekBhvr.destination = second_crossing_checkpoint;
+        steering.maxLinearSpeed = 2f;
+        return null;
+    }
+
+    public object Hasten(object o)
+    {
+
+        Debug.Log("Haste");
+        seekBhvr.destination = second_crossing_checkpoint;
+        steering.maxLinearSpeed = 2.5f;
+        return null;
+    }
+
+    public object Run(object o)
+    {
+
+        Debug.Log("Run");
+        seekBhvr.destination = second_crossing_checkpoint;
+        steering.maxLinearSpeed = 3f;
+        return null;
+    }
+
+    public object Turn(object o)
+    {
+        Debug.Log("Turn");
+        // TODO modella il tornare indietro
+        seekBhvr.destination = first_crossing_checkpoint;
+        steering.maxLinearSpeed = 3f;
+        //steering.ChangeBehaviourWeight<AvoidBehaviourVolume>(0f);
+        //steering.ChangeBehaviourWeight<SeparationBehaviour>(0f);
+        return null;
+    }
+
+    public object Wait(object o)
+    {
+        Debug.Log("Wait");
+        seekBhvr.destination = second_crossing_checkpoint;
+        steering.maxLinearSpeed = 0f;
+        return null;
+    }
+
+    
+
     // DECISIONS
+    public object HasCrossed(object o)
+    {
+        return Vector3.Dot((second_crossing_checkpoint - transform.position), (destination - transform.position)) <= 0;
+    }
+
     public object IsGoalReached(object o)
     {
-        return (transform.position - destination).magnitude <= seekBhvr.stopAt + 2; // TODO parametrizza questo valore (1f)
+        return (destination - transform.position).magnitude <= 1f; // TODO parametrizza questo valore e usa sqrmagnitud e usa seekbhvr maybe
     }
 
     public object IsNearCrossing(object o)
     {
-        return crossing.transform.GetChild(0).GetComponent<Collider>().bounds.SqrDistance(transform.position) < 0.75f; // TODO parametrizza questo valore (1f)
+        return crossing.bounds.SqrDistance(transform.position) < 1f; // TODO parametrizza questo valore
     }
 
     public object IsSemaphoreGreen(object o)
     {
-        return CheckSemaphore(SimpleTrafficLight.ColorState.green);
+        return CheckSemaphore(SimpleTrafficLight.ColorState.green); // TODO fix this ugly getter you can do better
     }
 
     public object IsSemaphoreYellow(object o)
     {
-        return CheckSemaphore(SimpleTrafficLight.ColorState.yellow);
+        return CheckSemaphore(SimpleTrafficLight.ColorState.yellow); // TODO fix this ugly getter you can do better
     }
 
     public object IsHalfCrossingPassed(object o)
     {
-        return Vector3.Dot((crossing.transform.position - transform.position), transform.forward) < 0;
+        return Vector3.Dot((crossing.transform.position - transform.position), (destination - transform.position)) < 0;
+    }
+
+    public object IsBeforeCrossing(object o)
+    {
+        return (first_crossing_checkpoint - transform.position).magnitude <= 1f;
     }
 
     // HELPER METHODS
@@ -168,7 +221,9 @@ public class Crosser : MonoBehaviour
 
     public void NewDestination()
     {
-        SetDestination(base_destination.position);// + new Vector3(0, 0, Random.Range(-7, 7)));
+        SetDestination(base_destination.position + new Vector3(0, 0, Random.Range(-14, 14)));
+        second_crossing_checkpoint = crossing.bounds.ClosestPoint(destination);
+        second_crossing_checkpoint -= (destination - second_crossing_checkpoint) * 0.25f;
     }
 
     public void SetDestination(Vector3 newDestination)
@@ -188,4 +243,12 @@ public class Crosser : MonoBehaviour
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+
+        Gizmos.DrawSphere(first_crossing_checkpoint, 0.1f);
+        Gizmos.DrawSphere(second_crossing_checkpoint, 0.1f);
+        Gizmos.DrawSphere(destination, 0.1f);
+    }
 }

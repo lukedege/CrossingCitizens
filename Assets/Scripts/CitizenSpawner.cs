@@ -16,7 +16,7 @@ public class CitizenSpawner : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             // Set initial position and rotation
-            Vector3 spawnPosition = Utilities.GenerateValidPosition(transform.position, range, template.transform.localScale.y, template.transform.localScale);
+            Vector3 spawnPosition = Utilities.GenerateValidPositionCapsule(transform.position, template.transform.localScale.y, template.transform.localScale, range, 14, Vector3.forward);
             Quaternion spawnRotation = transform.rotation;
 
             // Generate instance
