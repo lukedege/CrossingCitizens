@@ -149,18 +149,18 @@ MonoBehaviour:
   minLinearSpeed: 0
   maxLinearSpeed: 2
   maxAngularSpeed: 180
-  fieldOfView: 4
+  fieldOfView: 2
   showDebugGizmos: 1
   behaviourGroups:
   - keys:
-    - {fileID: 2923421552644850207}
-    - {fileID: 6583059207257990150}
     - {fileID: 7614496899000876990}
+    - {fileID: 6583059207257990150}
+    - {fileID: 2923421552644850207}
     - {fileID: 8575706212775592472}
     values:
-    - 0.2
     - 1
     - 1
+    - 0.1
     - 1
 --- !u!114 &7614496899000876990
 MonoBehaviour:
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aef1cae4e6fe3940bc5f6d266b43cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 1
+  sightRange: 2
   sightAngle: 45
   steer: 15
   backpedal: 1

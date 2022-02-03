@@ -5,6 +5,7 @@ using UnityEngine;
 public class AvoidBehaviour : SteeringBehaviour
 {
 	public float sightRange = 5f;
+	private float maxSightRange;
 	public float sightAngle = 45f;
 
 	public float steer = 15f;
@@ -18,12 +19,17 @@ public class AvoidBehaviour : SteeringBehaviour
 
 	private Vector3 dbgAcceleration;
 
-	public override Vector3 GetAcceleration (MovementStatus status) 
+    private void Awake()
+    {
+		maxSightRange = sightRange;
+    }
+
+    public override Vector3 GetAcceleration (MovementStatus status) 
 	{
 		Vector3 acceleration = Vector3.zero;
 		Vector3 verticalAdj = transform.position + Vector3.up * raycastVerticalOffset;
 		bool leftHit = false, midHit = false, rightHit = false;
-		float lateralSightRange = sightRange;
+		//float lateralSightRange = sightRange;
 
 		if(leftWhisker)
 			leftHit = Physics.Raycast (verticalAdj, Quaternion.Euler (0f, -sightAngle, 0f) * status.direction, sightRange);
@@ -32,7 +38,18 @@ public class AvoidBehaviour : SteeringBehaviour
 		if(rightWhisker)
 			rightHit = Physics.Raycast (verticalAdj, Quaternion.Euler (0f, sightAngle, 0f) * status.direction, sightRange);
 
-		Vector3 right = Quaternion.Euler (0f, 90f, 0f) * status.direction.normalized;
+		Vector3 right = Quaternion.Euler (0f, 115f, 0f) * status.direction.normalized;
+
+		if(leftHit || midHit || rightHit)
+        {
+			sightRange -= 0.01f;//* Time.deltaTime;
+        }
+        else
+        {
+			sightRange += 0.005f;// * Time.deltaTime;
+		}
+
+		sightRange = Mathf.Clamp(sightRange, 0, maxSightRange);
 
 		if (leftHit && !midHit && !rightHit) {
 			acceleration = right * steer;
