@@ -22,7 +22,7 @@ public class SeparationBehaviour : SteeringBehaviour
             separation += distanceFrom.normalized / (distanceFrom.magnitude + 0.0001f);
 
         }
-        separation = separation * 1;
+
         dbgAcceleration = separation;
 
         return separation;

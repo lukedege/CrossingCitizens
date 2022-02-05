@@ -23,18 +23,24 @@ public class Crosser : MonoBehaviour
 
     private DecisionTree dt;
 
+    private Animator animator;
+
     void Start()
     {
         start_position = transform.position;
 
         seekBhvr = GetComponent<SeekBehaviour>();
         steering = GetComponent<DelegatedSteering>();
-
+        animator = transform.GetChild(0).GetComponent<Animator>();
         
 
         semaphores = GameObject.FindGameObjectsWithTag("Semaphore");
         crossing = GameObject.FindGameObjectWithTag("Crossing").transform.GetChild(0).GetComponent<Collider>();
-        first_crossing_checkpoint = crossing.bounds.ClosestPoint(start_position);
+
+        //based on spawn
+        //first_crossing_checkpoint = crossing.bounds.ClosestPoint(start_position);
+        //centered
+        first_crossing_checkpoint = Vector3.Scale(crossing.bounds.ClosestPoint(start_position), new Vector3(1, 1, 0.5f));
 
         NewDestination();
         
@@ -111,6 +117,7 @@ public class Crosser : MonoBehaviour
         Debug.Log("Arrive");
         seekBhvr.destination = destination;
         steering.maxLinearSpeed = 2f;
+        animator.Play("Base Layer.Walking");
         return null;
     }
 
@@ -120,6 +127,7 @@ public class Crosser : MonoBehaviour
         Debug.Log("Approach");
         seekBhvr.destination = first_crossing_checkpoint;
         steering.maxLinearSpeed = 2f;
+        animator.Play("Base Layer.Walking");
         return null;
     }
 
@@ -128,12 +136,12 @@ public class Crosser : MonoBehaviour
         Debug.Log("Cross");
         seekBhvr.destination = second_crossing_checkpoint;
         steering.maxLinearSpeed = 2f;
+        animator.Play("Base Layer.Walking");
         return null;
     }
 
     public object Hasten(object o)
     {
-
         Debug.Log("Haste");
         seekBhvr.destination = second_crossing_checkpoint;
         steering.maxLinearSpeed = 2.5f;
@@ -145,16 +153,17 @@ public class Crosser : MonoBehaviour
 
         Debug.Log("Run");
         seekBhvr.destination = second_crossing_checkpoint;
-        steering.maxLinearSpeed = 3f;
+        steering.maxLinearSpeed = 3.5f;
+        animator.Play("Base Layer.Jogging");
         return null;
     }
 
     public object Turn(object o)
     {
         Debug.Log("Turn");
-        // TODO modella il tornare indietro
         seekBhvr.destination = first_crossing_checkpoint;
-        steering.maxLinearSpeed = 3f;
+        steering.maxLinearSpeed = 3.5f;
+        animator.Play("Base Layer.Jogging");
         //steering.ChangeBehaviourWeight<AvoidBehaviourVolume>(0f);
         //steering.ChangeBehaviourWeight<SeparationBehaviour>(0f);
         return null;
@@ -165,6 +174,7 @@ public class Crosser : MonoBehaviour
         Debug.Log("Wait");
         seekBhvr.destination = second_crossing_checkpoint;
         steering.maxLinearSpeed = 0f;
+        animator.Play("Base Layer.Idling");
         return null;
     }
 
@@ -203,7 +213,7 @@ public class Crosser : MonoBehaviour
 
     public object IsBeforeCrossing(object o)
     {
-        return (first_crossing_checkpoint - transform.position).magnitude <= 1f;
+        return (first_crossing_checkpoint - transform.position).magnitude <= 2f;
     }
 
     // HELPER METHODS

@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class AvoidBehaviour : SteeringBehaviour
 {
-	public float sightRange = 5f;
-	private float maxSightRange;
+	public float minSightRange = 0f;
+	public float maxSightRange = 2f;
+	public float sightDecay = 0.0075f;
+	public float sightRegrowth = 0.005f;
 	public float sightAngle = 45f;
+
+	private float sightRange;
 
 	public float steer = 15f;
 	public float backpedal = 10f;
@@ -21,7 +25,7 @@ public class AvoidBehaviour : SteeringBehaviour
 
     private void Awake()
     {
-		maxSightRange = sightRange;
+		sightRange = maxSightRange;
     }
 
     public override Vector3 GetAcceleration (MovementStatus status) 
@@ -29,30 +33,29 @@ public class AvoidBehaviour : SteeringBehaviour
 		Vector3 acceleration = Vector3.zero;
 		Vector3 verticalAdj = transform.position + Vector3.up * raycastVerticalOffset;
 		bool leftHit = false, midHit = false, rightHit = false;
-		//float lateralSightRange = sightRange;
 
-		if(leftWhisker)
+		if (leftWhisker)
 			leftHit = Physics.Raycast (verticalAdj, Quaternion.Euler (0f, -sightAngle, 0f) * status.direction, sightRange);
 		if(midWhisker)
 			midHit = Physics.Raycast (verticalAdj, status.direction, sightRange);
-		if(rightWhisker)
+		if (rightWhisker)
 			rightHit = Physics.Raycast (verticalAdj, Quaternion.Euler (0f, sightAngle, 0f) * status.direction, sightRange);
 
-		Vector3 right = Quaternion.Euler (0f, 115f, 0f) * status.direction.normalized;
+		Vector3 right = Quaternion.Euler (0f, 115f, 0f) * status.direction.normalized; 
 
 		if(leftHit || midHit || rightHit)
         {
-			sightRange -= 0.01f;//* Time.deltaTime;
+			sightRange -= sightDecay * Time.deltaTime;
         }
         else
         {
-			sightRange += 0.005f;// * Time.deltaTime;
+			sightRange += sightRegrowth * Time.deltaTime;
 		}
 
-		sightRange = Mathf.Clamp(sightRange, 0, maxSightRange);
+		sightRange = Mathf.Clamp(sightRange, minSightRange, maxSightRange);
 
 		if (leftHit && !midHit && !rightHit) {
-			acceleration = right * steer;
+			acceleration = right * steer; 
 		} else if (leftHit && midHit && !rightHit) {
 			acceleration = right * steer * 2f;
 		} else if (leftHit && midHit && rightHit) {
@@ -92,6 +95,6 @@ public class AvoidBehaviour : SteeringBehaviour
 			Gizmos.DrawLine(verticalAdj, verticalAdj + Quaternion.Euler(0f, sightAngle, 0f) * transform.forward * sightRange);
 
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(verticalAdj, verticalAdj + dbgAcceleration);
+		Gizmos.DrawLine(verticalAdj, verticalAdj + dbgAcceleration/2);
 	}
 }

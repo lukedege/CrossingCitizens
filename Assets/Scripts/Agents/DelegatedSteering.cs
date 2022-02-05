@@ -23,8 +23,8 @@ public class DelegatedSteering : MonoBehaviour {
 	private void Start () {
 		status = new MovementStatus ();
 
-		status.direction = transform.forward;
 		status.position = transform.position;
+		status.direction = transform.forward;
 	}
 
 	private void OnValidate()
@@ -72,7 +72,7 @@ public class DelegatedSteering : MonoBehaviour {
 
 		// disable myself to avoid flocking from myself :)
 		GetComponent<Collider>().enabled = false;
-		status.neighboursCount = Physics.OverlapSphereNonAlloc(transform.position, fieldOfView, status.neighbours, LayerMask.GetMask("Citizen","Obstacles"));
+		status.neighboursCount = Physics.OverlapSphereNonAlloc(transform.position + transform.forward*1f, fieldOfView, status.neighbours, LayerMask.GetMask("Citizen","Obstacles"));
 		GetComponent<Collider>().enabled = true;
 
 		// Scan all groups in order
@@ -106,7 +106,7 @@ public class DelegatedSteering : MonoBehaviour {
 		if (status != null) {
 			UnityEditor.Handles.Label (transform.position + 2f * transform.up, status.linearSpeed.ToString () + "\n" + status.angularSpeed.ToString ()
 				+ "\n" + currBhvrGroup);
-			UnityEditor.Handles.DrawWireDisc(transform.position, transform.up, fieldOfView);
+			UnityEditor.Handles.DrawWireDisc(transform.position + transform.forward*1f, transform.up, fieldOfView);
 			Gizmos.color = Color.magenta;
 			Gizmos.DrawLine(status.position, status.position + status.linearSpeed * status.direction * 3);
 		}

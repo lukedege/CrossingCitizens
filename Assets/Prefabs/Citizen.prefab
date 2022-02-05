@@ -158,7 +158,7 @@ MonoBehaviour:
     - {fileID: 2923421552644850207}
     - {fileID: 8575706212775592472}
     values:
-    - 1
+    - 0.75
     - 1
     - 0.1
     - 1
@@ -189,8 +189,8 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   gas: 12
   steer: 60
-  brake: 1
-  brakeAt: 0.3
+  brake: 0.5
+  brakeAt: 0.1
   stopAt: 0
 --- !u!114 &2923421552644850207
 MonoBehaviour:
@@ -218,7 +218,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aef1cae4e6fe3940bc5f6d266b43cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 2
+  minSightRange: 0.5
+  maxSightRange: 1
+  sightDecay: 1
+  sightRegrowth: 0.75
   sightAngle: 45
   steer: 15
   backpedal: 1
