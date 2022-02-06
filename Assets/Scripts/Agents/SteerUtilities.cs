@@ -51,7 +51,9 @@ public class Driver {
 		status.linearSpeed = Mathf.Clamp (status.linearSpeed, minV, maxV);
 		status.angularSpeed = Mathf.Clamp (status.angularSpeed, -maxSigma, maxSigma);
 
-		body.MovePosition (body.position + status.direction * tangentDelta);
+		if(tangentDelta > 0.01f)	// prevent sliding caused by numerical inaccuracy
+			body.MovePosition (body.position + status.direction * tangentDelta);
+		
 		body.MoveRotation (body.rotation * Quaternion.Euler (0f, rotationDelta, 0f));
 	}
 	public static void KinematicSteer(Transform transform, MovementStatus status, Vector3 acceleration,

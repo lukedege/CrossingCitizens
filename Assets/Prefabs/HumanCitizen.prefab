@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7614496899000876990}
   - component: {fileID: 6583059207257990150}
   - component: {fileID: 2923421552644850207}
-  - component: {fileID: -5136517591150097504}
+  - component: {fileID: 2046647406149046125}
   m_Layer: 6
   m_Name: HumanCitizen
   m_TagString: Citizen
@@ -143,16 +143,18 @@ MonoBehaviour:
   fieldOfView: 2
   showDebugGizmos: 1
   behaviourGroups:
-  - keys: []
-    values: []
   - keys:
-    - {fileID: 7614496899000876990}
-    - {fileID: 6583059207257990150}
+    - {fileID: 2046647406149046125}
+    values:
+    - 1
+  - keys:
     - {fileID: 2923421552644850207}
+    - {fileID: 6583059207257990150}
+    - {fileID: 7614496899000876990}
     values:
     - 1
     - 1
-    - 1
+    - 0.5
 --- !u!114 &7614496899000876990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,10 +180,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
-  gas: 12
+  gas: 8
   steer: 90
-  brake: 0.5
-  brakeAt: 0.1
+  brake: 0
+  brakeAt: 0
   stopAt: 0
 --- !u!114 &2923421552644850207
 MonoBehaviour:
@@ -195,9 +197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b56affa7cb8f9674c891aa48af17b1b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linearDrag: 6
+  linearDrag: 4
   angularDrag: 10
---- !u!114 &-5136517591150097504
+--- !u!114 &2046647406149046125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,16 +208,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4362129294603291633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eee6e0fe2ce22d47ab082c3e1a9eb34, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c72bfa3e8ff6124c9b0d4c514863151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSightRange: 0.5
-  maxSightRange: 3
-  sightDecay: 2
-  sightRegrowth: 1
-  steer: 10
-  backpedal: 1
-  raycastVerticalOffset: 0
+  minSightRange: 0.3
+  maxSightRange: 2
+  sightDecay: 4
+  sightRegrowth: 0.5
+  steer: 6
+  boxcastVerticalOffset: 0
 --- !u!1001 &3158086020702789489
 PrefabInstance:
   m_ObjectHideFlags: 0

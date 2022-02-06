@@ -61,7 +61,7 @@ public class Crosser : MonoBehaviour
         DTAction approach = new DTAction(Approach);
         DTAction cross = new DTAction(Cross);
         DTAction hasten = new DTAction(Hasten);
-        DTAction run = new DTAction(Run);
+        DTAction jog = new DTAction(Jog);
         DTAction turn = new DTAction(Turn);
         DTAction wait = new DTAction(Wait);
 
@@ -91,7 +91,7 @@ public class Crosser : MonoBehaviour
         isYellow.AddLink(true, hasten);
         isYellow.AddLink(false, isHalfPassed);
 
-        isHalfPassed.AddLink(true, run);
+        isHalfPassed.AddLink(true, jog);
         isHalfPassed.AddLink(false, isBeforeCrossing);
 
         isBeforeCrossing.AddLink(true, wait);
@@ -116,18 +116,15 @@ public class Crosser : MonoBehaviour
     {
         Debug.Log("Arrive");
         seekBhvr.destination = destination;
-        steering.maxLinearSpeed = 2f;
-        animator.Play("Base Layer.Walking");
+        StartWalking();
         return null;
     }
 
     public object Approach(object o)
     {
-
         Debug.Log("Approach");
         seekBhvr.destination = first_crossing_checkpoint;
-        steering.maxLinearSpeed = 2f;
-        animator.Play("Base Layer.Walking");
+        StartWalking();
         return null;
     }
 
@@ -135,8 +132,7 @@ public class Crosser : MonoBehaviour
     {
         Debug.Log("Cross");
         seekBhvr.destination = second_crossing_checkpoint;
-        steering.maxLinearSpeed = 2f;
-        animator.Play("Base Layer.Walking");
+        StartWalking();
         return null;
     }
 
@@ -144,17 +140,15 @@ public class Crosser : MonoBehaviour
     {
         Debug.Log("Haste");
         seekBhvr.destination = second_crossing_checkpoint;
-        steering.maxLinearSpeed = 2.5f;
+        StartHastening();
         return null;
     }
 
-    public object Run(object o)
+    public object Jog(object o)
     {
-
-        Debug.Log("Run");
+        Debug.Log("Jog");
         seekBhvr.destination = second_crossing_checkpoint;
-        steering.maxLinearSpeed = 3.5f;
-        animator.Play("Base Layer.Jogging");
+        StartJogging();
         return null;
     }
 
@@ -162,10 +156,7 @@ public class Crosser : MonoBehaviour
     {
         Debug.Log("Turn");
         seekBhvr.destination = first_crossing_checkpoint;
-        steering.maxLinearSpeed = 3.5f;
-        animator.Play("Base Layer.Jogging");
-        //steering.ChangeBehaviourWeight<AvoidBehaviourVolume>(0f);
-        //steering.ChangeBehaviourWeight<SeparationBehaviour>(0f);
+        StartJogging();
         return null;
     }
 
@@ -173,8 +164,8 @@ public class Crosser : MonoBehaviour
     {
         Debug.Log("Wait");
         seekBhvr.destination = second_crossing_checkpoint;
-        steering.maxLinearSpeed = 0f;
-        animator.Play("Base Layer.Idling");
+        StartIdling();
+        //steering.ChangeBehaviourWeight<AvoidBehaviourVolumeSingle>(0f);
         return null;
     }
 
@@ -183,7 +174,9 @@ public class Crosser : MonoBehaviour
     // DECISIONS
     public object HasCrossed(object o)
     {
-        return Vector3.Dot((second_crossing_checkpoint - transform.position), (destination - transform.position)) <= 0;
+        Vector3 second_checkpoint_forward = Vector3.Scale((crossing.transform.position - second_crossing_checkpoint), crossing.transform.right).normalized;
+
+        return Vector3.Dot(second_checkpoint_forward, second_crossing_checkpoint - transform.position) > 0;
     }
 
     public object IsGoalReached(object o)
@@ -193,7 +186,7 @@ public class Crosser : MonoBehaviour
 
     public object IsNearCrossing(object o)
     {
-        return crossing.bounds.SqrDistance(transform.position) < 1f; // TODO parametrizza questo valore
+        return crossing.bounds.SqrDistance(transform.position) < 2f; // TODO parametrizza questo valore
     }
 
     public object IsSemaphoreGreen(object o)
@@ -213,7 +206,7 @@ public class Crosser : MonoBehaviour
 
     public object IsBeforeCrossing(object o)
     {
-        return (first_crossing_checkpoint - transform.position).magnitude <= 2f;
+        return (first_crossing_checkpoint - transform.position).magnitude <= 1.5f;
     }
 
     // HELPER METHODS
@@ -229,6 +222,7 @@ public class Crosser : MonoBehaviour
         return false;
     }
 
+    // HELPER FUNCTIONS
     public void NewDestination()
     {
         SetDestination(base_destination.position + new Vector3(0, 0, Random.Range(-14, 14)));
@@ -241,6 +235,33 @@ public class Crosser : MonoBehaviour
         prev_destination = destination;
         destination = newDestination;
         seekBhvr.destination = destination;
+    }
+
+    public void StartWalking()
+    {
+        steering.maxLinearSpeed = 2f;
+        animator.Play("Base Layer.Walking");
+        animator.speed = 1f;
+    }
+
+    public void StartHastening()
+    {
+        steering.maxLinearSpeed = 2.5f;
+        animator.speed = 1.25f;
+    }
+
+    public void StartJogging()
+    {
+        steering.maxLinearSpeed = 3f;
+        animator.Play("Base Layer.Jogging");
+        animator.speed = 1f;
+    }
+
+    public void StartIdling()
+    {
+        steering.maxLinearSpeed = 0f;
+        animator.Play("Base Layer.Idling");
+        animator.speed = 1f;
     }
 
     // TODO implement decision tree
