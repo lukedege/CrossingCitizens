@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (Rigidbody))]
-public class DelegatedSteering : MonoBehaviour {
-
+public class DelegatedSteering : MonoBehaviour 
+{
 	public float minLinearSpeed = 0.5f;
 	public float maxLinearSpeed = 5f;
 	public float maxAngularSpeed = 5f;
 	public float fieldOfView = 2f;
 
-	public bool showDebugGizmos = true;
-
+	[HideInInspector]
 	public MovementStatus status;
-
+	[HideInInspector]
 	public List<WeightedBehaviours> behaviourGroups = new List<WeightedBehaviours>();
 
 	// debug info
 	private string currBhvrGroup;
-	private string currBhvr;
 
 	private void Start () {
 		status = new MovementStatus ();
@@ -57,8 +55,11 @@ public class DelegatedSteering : MonoBehaviour {
 				if (bhvr.Key.GetType() == typeof(T))
 					bhvrToChange = bhvr.Key;
             }
-			if(bhvrToChange != null)
+			if (bhvrToChange != null)
+			{
 				bhvrGroup[bhvrToChange] = newWeight;
+				break;
+			}
         }
 
     }

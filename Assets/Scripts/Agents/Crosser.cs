@@ -3,47 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(DelegatedSteering), typeof(SeekBehaviour))]
 public class Crosser : MonoBehaviour
 {
-    public float reactionTime = .2f;
+    public float reactionTime = .2f;            // reaction time of the crosser
+    public float waitingDistance = 1.5f;        // min distance for waiting in front of the crossing
+    public float arriveDistance = 1f;           // min distance to consider the destination reached
+    public float nearCrossingDistance = 1.5f;   // min distance to consider close to the crossing
 
-    public Transform base_destination;
-    private Vector3 destination;
+    public Transform baseDestination;           // base position to reach
 
-    private Vector3 prev_destination;
-    private Vector3 start_position;
-    private Vector3 first_crossing_checkpoint;
-    private Vector3 second_crossing_checkpoint;
+    private Vector3 startPosition;              // position in which the crosser was spawned
+    private Vector3 firstCrossingCheckpoint;    // position to reach before the crossing
+    private Vector3 secondCrossingCheckpoint;   // position to reach while the crossing
+    private Vector3 destination;                // position to reach after crossing
 
-    private SeekBehaviour seekBhvr;
-    private DelegatedSteering steering;
+    private Vector3 halfCrossingTowards;        // vector used to test if we're past the half of the crossing
+    private Vector3 secondCheckpointTowards;    // vector used to test if we're past the second checkpoint
 
-    private GameObject[] semaphores;
-    private Collider crossing;
+    private DelegatedSteering steering;         // steering behaviour to control crosser movement
+    private SeekBehaviour seekBhvr;             // seek behaviour to assign intermediate destinations
 
-    private DecisionTree dt;
+    private SimpleTrafficLight semaphore;       // semaphore to look at 
+    private Collider crossing;                  // crossing boundaries
 
-    private Animator animator;
+    private DecisionTree dt;                    // decision tree
+
+    private Animator animator;                  // animator to control the crosser reaction to semaphore states
 
     void Start()
     {
-        start_position = transform.position;
+        startPosition = transform.position;
 
         seekBhvr = GetComponent<SeekBehaviour>();
         steering = GetComponent<DelegatedSteering>();
         animator = transform.GetChild(0).GetComponent<Animator>();
-        
 
-        semaphores = GameObject.FindGameObjectsWithTag("Semaphore");
+        semaphore = FindClosestSemaphore();
         crossing = GameObject.FindGameObjectWithTag("Crossing").transform.GetChild(0).GetComponent<Collider>();
-
-        //based on spawn
-        //first_crossing_checkpoint = crossing.bounds.ClosestPoint(start_position);
-        //centered
-        first_crossing_checkpoint = Vector3.Scale(crossing.bounds.ClosestPoint(start_position), new Vector3(1, 1, 0.5f));
+        firstCrossingCheckpoint = Vector3.Scale(crossing.bounds.ClosestPoint(startPosition), new Vector3(1, 1, 0.3f));
 
         NewDestination();
-        
+
+        // vector towards first crossing checkpoint starting from half crossing
+        halfCrossingTowards = Vector3.Scale((firstCrossingCheckpoint - crossing.transform.position), crossing.transform.right).normalized;
+        // vector towards first crossing checkpoint starting from second checkpoint (end crossing)
+        secondCheckpointTowards = Vector3.Scale((crossing.transform.position - secondCrossingCheckpoint), crossing.transform.right).normalized;
 
         InitDT();
         StartCoroutine(Wander());
@@ -103,9 +108,8 @@ public class Crosser : MonoBehaviour
     // ACTIONS
     public object Despawn(object o)
     {
-
         Debug.Log("Despawn");
-        Vector3 respawnPosition = Utilities.GenerateValidPosition(start_position, 2f, transform.localScale.y, transform.localScale);
+        Vector3 respawnPosition = Utilities.GenerateValidPosition(startPosition, 2f, transform.localScale.y, transform.localScale);
         transform.position = respawnPosition;
 
         NewDestination();
@@ -123,7 +127,7 @@ public class Crosser : MonoBehaviour
     public object Approach(object o)
     {
         Debug.Log("Approach");
-        seekBhvr.destination = first_crossing_checkpoint;
+        seekBhvr.destination = firstCrossingCheckpoint;
         StartWalking();
         return null;
     }
@@ -131,7 +135,7 @@ public class Crosser : MonoBehaviour
     public object Cross(object o)
     {
         Debug.Log("Cross");
-        seekBhvr.destination = second_crossing_checkpoint;
+        seekBhvr.destination = secondCrossingCheckpoint;
         StartWalking();
         return null;
     }
@@ -139,7 +143,7 @@ public class Crosser : MonoBehaviour
     public object Hasten(object o)
     {
         Debug.Log("Haste");
-        seekBhvr.destination = second_crossing_checkpoint;
+        seekBhvr.destination = secondCrossingCheckpoint;
         StartHastening();
         return null;
     }
@@ -147,7 +151,7 @@ public class Crosser : MonoBehaviour
     public object Jog(object o)
     {
         Debug.Log("Jog");
-        seekBhvr.destination = second_crossing_checkpoint;
+        seekBhvr.destination = secondCrossingCheckpoint;
         StartJogging();
         return null;
     }
@@ -155,7 +159,7 @@ public class Crosser : MonoBehaviour
     public object Turn(object o)
     {
         Debug.Log("Turn");
-        seekBhvr.destination = first_crossing_checkpoint;
+        seekBhvr.destination = firstCrossingCheckpoint;
         StartJogging();
         return null;
     }
@@ -163,76 +167,82 @@ public class Crosser : MonoBehaviour
     public object Wait(object o)
     {
         Debug.Log("Wait");
-        seekBhvr.destination = second_crossing_checkpoint;
+        seekBhvr.destination = secondCrossingCheckpoint;
         StartIdling();
-        //steering.ChangeBehaviourWeight<AvoidBehaviourVolumeSingle>(0f);
         return null;
     }
-
-    
 
     // DECISIONS
     public object HasCrossed(object o)
     {
-        Vector3 second_checkpoint_forward = Vector3.Scale((crossing.transform.position - second_crossing_checkpoint), crossing.transform.right).normalized;
-
-        return Vector3.Dot(second_checkpoint_forward, second_crossing_checkpoint - transform.position) > 0;
+        return Vector3.Dot(secondCheckpointTowards, secondCrossingCheckpoint - transform.position) > 0;
     }
 
     public object IsGoalReached(object o)
     {
-        return (destination - transform.position).magnitude <= 1f; // TODO parametrizza questo valore e usa sqrmagnitud e usa seekbhvr maybe
+        return (destination - transform.position).sqrMagnitude <= arriveDistance * arriveDistance; 
     }
 
     public object IsNearCrossing(object o)
     {
-        return crossing.bounds.SqrDistance(transform.position) < 2f; // TODO parametrizza questo valore
+        return crossing.bounds.SqrDistance(transform.position) < nearCrossingDistance * nearCrossingDistance; 
     }
 
     public object IsSemaphoreGreen(object o)
     {
-        return CheckSemaphore(SimpleTrafficLight.ColorState.green); // TODO fix this ugly getter you can do better
+        return CheckSemaphore(SimpleTrafficLight.ColorState.green);
     }
 
     public object IsSemaphoreYellow(object o)
     {
-        return CheckSemaphore(SimpleTrafficLight.ColorState.yellow); // TODO fix this ugly getter you can do better
+        return CheckSemaphore(SimpleTrafficLight.ColorState.yellow); 
     }
 
     public object IsHalfCrossingPassed(object o)
     {
-        return Vector3.Dot((crossing.transform.position - transform.position), (destination - transform.position)) < 0;
+        return Vector3.Dot(halfCrossingTowards, crossing.transform.position - transform.position) > 0;
     }
 
     public object IsBeforeCrossing(object o)
     {
-        return (first_crossing_checkpoint - transform.position).magnitude <= 1.5f;
+        return (firstCrossingCheckpoint - transform.position).sqrMagnitude <= waitingDistance * waitingDistance;
     }
 
     // HELPER METHODS
+    SimpleTrafficLight FindClosestSemaphore()
+    {
+        GameObject closest = null;
+        GameObject[] semaphores = GameObject.FindGameObjectsWithTag("Semaphore");
+        if (semaphores.Length > 0)
+        {
+            closest = semaphores[0];
+
+            for (int i = 1; i < semaphores.Length; i++)
+            {
+                // if its closer to crosser than the current closest, choose it as new closest
+                if ((semaphores[i].transform.position - startPosition).sqrMagnitude < (closest.transform.position - startPosition).sqrMagnitude)
+                    closest = semaphores[i];
+            }
+        }
+
+        return closest.GetComponent<SimpleTrafficLight>();
+    }
 
     bool CheckSemaphore(SimpleTrafficLight.ColorState color)
     {
-        foreach (var s in semaphores)
-        {
-            if (s.GetComponent<SimpleTrafficLight>().currentState == color)
-                return true;
-        }
-
-        return false;
+        return semaphore.currentState == color;
     }
 
     // HELPER FUNCTIONS
     public void NewDestination()
     {
-        SetDestination(base_destination.position + new Vector3(0, 0, Random.Range(-14, 14)));
-        second_crossing_checkpoint = crossing.bounds.ClosestPoint(destination);
-        second_crossing_checkpoint -= (destination - second_crossing_checkpoint) * 0.25f;
+        SetDestination(baseDestination.position + new Vector3(0, 0, Random.Range(-14, 14)));
+        secondCrossingCheckpoint = crossing.bounds.ClosestPoint(destination);
+        secondCrossingCheckpoint -= (destination - secondCrossingCheckpoint) * 0.25f;
     }
 
     public void SetDestination(Vector3 newDestination)
     {
-        prev_destination = destination;
         destination = newDestination;
         seekBhvr.destination = destination;
     }
@@ -242,6 +252,7 @@ public class Crosser : MonoBehaviour
         steering.maxLinearSpeed = 2f;
         animator.Play("Base Layer.Walking");
         animator.speed = 1f;
+        steering.ChangeBehaviourWeight<AvoidBehaviourVolumeAdaptive>(1f);
     }
 
     public void StartHastening()
@@ -262,6 +273,7 @@ public class Crosser : MonoBehaviour
         steering.maxLinearSpeed = 0f;
         animator.Play("Base Layer.Idling");
         animator.speed = 1f;
+        steering.ChangeBehaviourWeight<AvoidBehaviourVolumeAdaptive>(0f);
     }
 
     // TODO implement decision tree
@@ -278,8 +290,11 @@ public class Crosser : MonoBehaviour
     {
         Gizmos.color = Color.blue;
 
-        Gizmos.DrawSphere(first_crossing_checkpoint, 0.1f);
-        Gizmos.DrawSphere(second_crossing_checkpoint, 0.1f);
+        Gizmos.DrawSphere(startPosition, 0.1f);
+        Gizmos.DrawSphere(firstCrossingCheckpoint, 0.1f);
+        Gizmos.DrawSphere(secondCrossingCheckpoint, 0.1f);
+
+        Gizmos.color = Color.red;
         Gizmos.DrawSphere(destination, 0.1f);
     }
 }

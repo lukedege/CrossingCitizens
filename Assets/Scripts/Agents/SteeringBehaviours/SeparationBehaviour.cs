@@ -9,7 +9,7 @@ public class SeparationBehaviour : SteeringBehaviour
     public override Vector3 GetAcceleration(MovementStatus status)
     {
         Vector3 separation = Vector3.zero;
-        Vector3 distanceFrom = Vector3.zero;
+        Vector3 distanceFrom;
 
         // we check EVERY neighbour because we want to stay away from other boids but stay on the floor
         for (int i = 0; i < status.neighboursCount; i++)

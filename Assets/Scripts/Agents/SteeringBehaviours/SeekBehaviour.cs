@@ -5,12 +5,12 @@ public class SeekBehaviour : SteeringBehaviour
 
 	public Vector3 destination;
 
-	public float gas = 3f;
-	public float steer = 30f;
-	public float brake = 20f;
+	public float gas = 8f;
+	public float steer = 90f;
+	public float brake = 0f;
 
-	public float brakeAt = 5f;
-	public float stopAt = 0.01f;
+	public float brakeAt = 0f;
+	public float stopAt = 0f;
 
 	private Vector3 dbgAcceleration;
 

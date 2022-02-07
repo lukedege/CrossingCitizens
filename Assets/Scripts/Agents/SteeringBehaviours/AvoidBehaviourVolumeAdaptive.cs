@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AvoidBehaviourVolumeSingle : SteeringBehaviour
+public class AvoidBehaviourVolumeAdaptive : SteeringBehaviour
 {
-	public float minSightRange = 0f;
+	public float minSightRange = 0.3f;
 	public float maxSightRange = 2f;
-	public float sightDecay = 0.0075f;
-	public float sightRegrowth = 0.005f;
+	public float sightDecay = 4f;
+	public float sightRegrowth = 1.5f;
 	private float sightRange;
 
-	public float steer = 15f;
+	public float steer = 7f;
 
 	public float boxcastVerticalOffset = 0f;
 
@@ -26,12 +26,9 @@ public class AvoidBehaviourVolumeSingle : SteeringBehaviour
 		Vector3 acceleration = Vector3.zero;
 		Collider collider = GetComponent<Collider> ();
 		Vector3 verticalAdj = transform.position + Vector3.up * boxcastVerticalOffset;
-		bool hit; RaycastHit hitInfo;
-
-		hit = Physics.BoxCast(verticalAdj,
+		bool hit = Physics.BoxCast(verticalAdj,
 											  collider.bounds.extents,
 											  status.direction,
-											  out hitInfo,
 											  transform.rotation,
 											  sightRange, LayerMask.GetMask("Citizen", "Obstacles"));
 
@@ -39,9 +36,9 @@ public class AvoidBehaviourVolumeSingle : SteeringBehaviour
 
 		if (hit)
 		{
-			sightRange -= sightDecay * Time.deltaTime;
+			acceleration = right * steer;
 
-			acceleration = right * steer;//(1 / (hitInfo.distance + 0.001f));
+			sightRange -= sightDecay * Time.deltaTime;
 		}
 		else
 		{
@@ -65,6 +62,5 @@ public class AvoidBehaviourVolumeSingle : SteeringBehaviour
 		
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(verticalAdj, verticalAdj + dbgAcceleration);
-
 	}
 }

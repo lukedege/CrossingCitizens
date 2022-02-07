@@ -124,7 +124,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reactionTime: 0.2
-  base_destination: {fileID: 0}
+  waitingDistance: 1.6
+  arriveDistance: 1
+  nearCrossingDistance: 1.5
+  baseDestination: {fileID: 0}
 --- !u!114 &7428189320222264139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,20 +144,19 @@ MonoBehaviour:
   maxLinearSpeed: 2
   maxAngularSpeed: 180
   fieldOfView: 2
-  showDebugGizmos: 1
   behaviourGroups:
   - keys:
     - {fileID: 2046647406149046125}
     values:
     - 1
   - keys:
+    - {fileID: 7614496899000876990}
     - {fileID: 2923421552644850207}
     - {fileID: 6583059207257990150}
-    - {fileID: 7614496899000876990}
     values:
-    - 1
-    - 1
     - 0.5
+    - 1
+    - 1
 --- !u!114 &7614496899000876990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,8 +216,8 @@ MonoBehaviour:
   minSightRange: 0.3
   maxSightRange: 2
   sightDecay: 4
-  sightRegrowth: 0.5
-  steer: 6
+  sightRegrowth: 1
+  steer: 7
   boxcastVerticalOffset: 0
 --- !u!1001 &3158086020702789489
 PrefabInstance:
