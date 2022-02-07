@@ -127,7 +127,7 @@ public class Crosser : MonoBehaviour
     public object Approach(object o)
     {
         Debug.Log("Approach");
-        seekBhvr.destination = firstCrossingCheckpoint;
+        seekBhvr.destination = crossing.bounds.ClosestPoint(transform.position);
         StartWalking();
         return null;
     }

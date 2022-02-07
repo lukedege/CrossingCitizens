@@ -124,9 +124,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reactionTime: 0.2
-  waitingDistance: 1.6
+  waitingDistance: 1.5
   arriveDistance: 1
-  nearCrossingDistance: 1.5
+  nearCrossingDistance: 1.4
   baseDestination: {fileID: 0}
 --- !u!114 &7428189320222264139
 MonoBehaviour:
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c72bfa3e8ff6124c9b0d4c514863151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSightRange: 0.3
+  minSightRange: 0.4
   maxSightRange: 2
   sightDecay: 4
   sightRegrowth: 1
