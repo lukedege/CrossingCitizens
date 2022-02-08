@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0facbc72e85f0554cb12bb0a0c942d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reactionTime: 0.2
+  reactionTime: 0.5
   waitingDistance: 1.5
   arriveDistance: 1
   nearCrossingDistance: 1.4
@@ -213,10 +213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c72bfa3e8ff6124c9b0d4c514863151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSightRange: 0.4
+  minSightRange: 0.3
   maxSightRange: 2
   sightDecay: 4
-  sightRegrowth: 1
+  sightRegrowth: 1.2
   steer: 7
   boxcastVerticalOffset: 0
 --- !u!1001 &3158086020702789489

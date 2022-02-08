@@ -108,7 +108,7 @@ public class Crosser : MonoBehaviour
     // ACTIONS
     public object Despawn(object o)
     {
-        Debug.Log("Despawn");
+        //Debug.Log("Despawn");
         Vector3 respawnPosition = Utilities.GenerateValidPosition(startPosition, 2f, transform.localScale.y, transform.localScale);
         transform.position = respawnPosition;
 
@@ -118,7 +118,7 @@ public class Crosser : MonoBehaviour
 
     public object Arrive(object o)
     {
-        Debug.Log("Arrive");
+        //Debug.Log("Arrive");
         seekBhvr.destination = destination;
         StartWalking();
         return null;
@@ -126,7 +126,7 @@ public class Crosser : MonoBehaviour
 
     public object Approach(object o)
     {
-        Debug.Log("Approach");
+        //Debug.Log("Approach");
         seekBhvr.destination = crossing.bounds.ClosestPoint(transform.position);
         StartWalking();
         return null;
@@ -134,7 +134,7 @@ public class Crosser : MonoBehaviour
 
     public object Cross(object o)
     {
-        Debug.Log("Cross");
+        //Debug.Log("Cross");
         seekBhvr.destination = secondCrossingCheckpoint;
         StartWalking();
         return null;
@@ -142,7 +142,7 @@ public class Crosser : MonoBehaviour
 
     public object Hasten(object o)
     {
-        Debug.Log("Haste");
+        //Debug.Log("Haste");
         seekBhvr.destination = secondCrossingCheckpoint;
         StartHastening();
         return null;
@@ -150,7 +150,7 @@ public class Crosser : MonoBehaviour
 
     public object Jog(object o)
     {
-        Debug.Log("Jog");
+        //Debug.Log("Jog");
         seekBhvr.destination = secondCrossingCheckpoint;
         StartJogging();
         return null;
@@ -158,7 +158,7 @@ public class Crosser : MonoBehaviour
 
     public object Turn(object o)
     {
-        Debug.Log("Turn");
+        //Debug.Log("Turn");
         seekBhvr.destination = firstCrossingCheckpoint;
         StartJogging();
         return null;
@@ -166,7 +166,7 @@ public class Crosser : MonoBehaviour
 
     public object Wait(object o)
     {
-        Debug.Log("Wait");
+        //Debug.Log("Wait");
         seekBhvr.destination = secondCrossingCheckpoint;
         StartIdling();
         return null;

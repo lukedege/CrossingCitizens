@@ -10,11 +10,13 @@ public static class Utilities
     public static Vector3 GenerateValidPosition(Vector3 position, float range, float height, Vector3 objectSize)
     {
         Vector3 randomPosition;
+        int trial = -1;
         do
         {
             randomPosition = GenerateRandomPoint(position, range);
             randomPosition.y = height;
-        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")));
+            trial++;
+        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")) && trial < 3);
 
         return randomPosition;
     }
@@ -24,6 +26,7 @@ public static class Utilities
     {
         Vector3 randomPosition, a, b;
         float alpha = UnityEngine.Random.value;
+        int trial = -1;
         do
         {
             // Generate two random points in two spheres of capsRadius at capsHeight distance and lerp between these points
@@ -31,7 +34,8 @@ public static class Utilities
             b = GenerateRandomPoint(position + direction.normalized * capsHeight, capsRadius);
             a.y = b.y = height;
             randomPosition = Vector3.Lerp(a, b, alpha);
-        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")));
+            trial++;
+        } while (Physics.CheckSphere(randomPosition, MaxVector3Component(objectSize), LayerMask.GetMask("Citizen")) && trial < 3);
 
         return randomPosition;
     }
