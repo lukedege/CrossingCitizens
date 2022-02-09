@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 2923421552644850207}
   - component: {fileID: 2046647406149046125}
   m_Layer: 6
-  m_Name: HumanCitizen
+  m_Name: HumanCitizenCrowded
   m_TagString: Citizen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -127,6 +127,7 @@ MonoBehaviour:
   waitingDistance: 1.5
   arriveDistance: 1
   nearCrossingDistance: 1.4
+  destinationOffset: 14
   walkSpeed: 2
   hasteSpeed: 2.5
   jogSpeed: 3.5
@@ -217,7 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c72bfa3e8ff6124c9b0d4c514863151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSightRange: 0.3
+  minSightRange: 0
   maxSightRange: 2
   sightDecay: 4
   sightRegrowth: 1.5

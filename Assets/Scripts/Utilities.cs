@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public static class Utilities
 {
     // Generate a random position at a certain "height" in a sphere of radius "range"
-    public static Vector3 GenerateValidPosition(Vector3 position, float range, float height, Vector3 objectSize)
+    public static Vector3 GenerateValidPosition(Vector3 position, float range, float height)
     {
         Vector3 randomPosition = GenerateRandomPoint(position, range);
         randomPosition.y = height;
@@ -16,7 +16,7 @@ public static class Utilities
     }
 
     // Generate a random position at a certain "height" in a capsule with a certain radius and a certain height along a certain direction
-    public static Vector3 GenerateValidPositionCapsule(Vector3 position, float height, Vector3 objectSize, float capsRadius, float capsHeight, Vector3 direction)
+    public static Vector3 GenerateValidPositionCapsule(Vector3 position, float height, float capsRadius, float capsHeight, Vector3 direction)
     {
         Vector3 randomPosition, a, b;
         float alpha = UnityEngine.Random.value;

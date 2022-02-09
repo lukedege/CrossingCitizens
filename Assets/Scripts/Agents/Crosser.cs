@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(DelegatedSteering), typeof(SeekBehaviour))]
+[RequireComponent(typeof(PrioritySteering), typeof(SeekBehaviour))]
 public class Crosser : MonoBehaviour
 {
     public float reactionTime = .2f;            // reaction time of the crosser
     public float waitingDistance = 1.5f;        // min distance for waiting in front of the crossing
     public float arriveDistance = 1f;           // min distance to consider the destination reached
     public float nearCrossingDistance = 1.4f;   // min distance to consider close to the crossing
+    public float destinationOffset = 14f;       // destination offset from which move away from baseDestination when choosing a random new destination
 
     public float walkSpeed = 2f;                // maximum linear speed while walking
     public float hasteSpeed = 2.5f;             // maximum linear speed while hastening
@@ -25,7 +26,7 @@ public class Crosser : MonoBehaviour
     private Vector3 halfCrossingTowards;        // vector used to test if we're past the half of the crossing
     private Vector3 secondCheckpointTowards;    // vector used to test if we're past the second checkpoint
 
-    private DelegatedSteering steering;         // steering behaviour to control crosser movement
+    private PrioritySteering steering;         // steering behaviour to control crosser movement
     private SeekBehaviour seekBhvr;             // seek behaviour to assign intermediate destinations
 
     private SimpleTrafficLight semaphore;       // semaphore to look at 
@@ -40,7 +41,7 @@ public class Crosser : MonoBehaviour
         startPosition = transform.position;
 
         seekBhvr = GetComponent<SeekBehaviour>();
-        steering = GetComponent<DelegatedSteering>();
+        steering = GetComponent<PrioritySteering>();
         animator = transform.GetChild(0).GetComponent<Animator>();
 
         semaphore = FindClosestSemaphore();
@@ -50,9 +51,9 @@ public class Crosser : MonoBehaviour
         NewDestination();
 
         // vector towards first crossing checkpoint starting from half crossing
-        halfCrossingTowards = Vector3.Scale((firstCrossingCheckpoint - crossing.transform.position), crossing.transform.right).normalized;
-        // vector towards first crossing checkpoint starting from second checkpoint (end crossing)
-        secondCheckpointTowards = Vector3.Scale((crossing.transform.position - secondCrossingCheckpoint), crossing.transform.right).normalized;
+        halfCrossingTowards = Vector3.Scale((firstCrossingCheckpoint - crossing.transform.position), crossing.transform.right);
+        // vector towards half crossing starting from second checkpoint (end crossing)
+        secondCheckpointTowards = Vector3.Scale((crossing.transform.position - secondCrossingCheckpoint), crossing.transform.right);
 
         InitDT();
         StartCoroutine(Wander());
@@ -113,7 +114,7 @@ public class Crosser : MonoBehaviour
     public object Despawn(object o)
     {
         //Debug.Log("Despawn");
-        Vector3 respawnPosition = Utilities.GenerateValidPosition(startPosition, 2f, transform.localScale.y, transform.localScale);
+        Vector3 respawnPosition = Utilities.GenerateValidPosition(startPosition, 2f, transform.localScale.y);
         transform.position = respawnPosition;
 
         NewDestination();
@@ -189,7 +190,7 @@ public class Crosser : MonoBehaviour
 
     public object IsNearCrossing(object o)
     {
-        return crossing.bounds.SqrDistance(transform.position) < nearCrossingDistance * nearCrossingDistance; 
+        return crossing.bounds.SqrDistance(transform.position) <= nearCrossingDistance * nearCrossingDistance; 
     }
 
     public object IsSemaphoreGreen(object o)
@@ -240,7 +241,7 @@ public class Crosser : MonoBehaviour
     // HELPER FUNCTIONS
     public void NewDestination()
     {
-        SetDestination(baseDestination.position + new Vector3(0, 0, Random.Range(-14, 14)));
+        SetDestination(baseDestination.position + baseDestination.right * Random.Range(-destinationOffset, destinationOffset));
         secondCrossingCheckpoint = crossing.bounds.ClosestPoint(destination);
         secondCrossingCheckpoint -= (destination - secondCrossingCheckpoint) * 0.25f;
     }

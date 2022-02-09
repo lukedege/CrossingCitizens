@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent (typeof (Rigidbody))]
-public class DelegatedSteering : MonoBehaviour 
+public class PrioritySteering : MonoBehaviour 
 {
 	public float minLinearSpeed = 0.5f;
 	public float maxLinearSpeed = 5f;

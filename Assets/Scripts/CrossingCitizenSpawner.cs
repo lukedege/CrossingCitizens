@@ -20,7 +20,7 @@ public class CrossingCitizenSpawner : MonoBehaviour
             for (int i = 0; i < amount; i++)
             {
                 // Set initial position and rotation
-                Vector3 spawnPosition = Utilities.GenerateValidPositionCapsule(transform.position, citizenTemplate.transform.localScale.y, citizenTemplate.transform.localScale,
+                Vector3 spawnPosition = Utilities.GenerateValidPositionCapsule(transform.position, citizenTemplate.transform.localScale.y,
                     lengthAcrossSidewalk * 0.5f, lengthAlongSidewalk, transform.right);
                 Quaternion spawnRotation = transform.rotation;
 

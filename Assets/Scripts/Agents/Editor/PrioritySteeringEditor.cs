@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(DelegatedSteering))]
-public class DelegatedSteeringEditor : Editor
+[CustomEditor(typeof(PrioritySteering))]
+public class PrioritySteeringEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
         serializedObject.Update();
 
-        DelegatedSteering agent = (DelegatedSteering)target;
+        PrioritySteering agent = (PrioritySteering)target;
 
         EditorGUILayout.Separator();
         DrawUILine(Color.grey);
