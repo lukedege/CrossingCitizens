@@ -7,11 +7,11 @@ using UnityEngine.AI;
 public class CrossingCitizenSpawner : MonoBehaviour
 {
     [Header("Spawn properties")]
-    public GameObject template;                 // The GameObject template of the citizen to spawn
+    public GameObject citizenTemplate;          // The GameObject template of the citizen to spawn
     public int amount = 10;                     // The amount of instances of the template to spawn
     public float lengthAlongSidewalk = 14f;     // The size of the spawn area along the spawner's right vector (aka the length along the sidewalk)
     public float lengthAcrossSidewalk = 6f;     // The size of the spawn area along the spawner's forward vector (aka the length across the sidewalk)
-    public GameObject baseDestination;         // The base destination the citizen should reach
+    public Transform baseDestination;          // The base destination the citizen should reach
 
     void Start()
     {
@@ -20,13 +20,13 @@ public class CrossingCitizenSpawner : MonoBehaviour
             for (int i = 0; i < amount; i++)
             {
                 // Set initial position and rotation
-                Vector3 spawnPosition = Utilities.GenerateValidPositionCapsule(transform.position, template.transform.localScale.y, template.transform.localScale,
+                Vector3 spawnPosition = Utilities.GenerateValidPositionCapsule(transform.position, citizenTemplate.transform.localScale.y, citizenTemplate.transform.localScale,
                     lengthAcrossSidewalk * 0.5f, lengthAlongSidewalk, transform.right);
                 Quaternion spawnRotation = transform.rotation;
 
                 // Generate instance
-                GameObject citizenInstance = Instantiate(template, spawnPosition, spawnRotation);
-                citizenInstance.GetComponent<Crosser>().baseDestination = baseDestination.transform;
+                GameObject citizenInstance = Instantiate(citizenTemplate, spawnPosition, spawnRotation);
+                citizenInstance.GetComponent<Crosser>().baseDestination = baseDestination;
             }
         }
         else
@@ -38,6 +38,15 @@ public class CrossingCitizenSpawner : MonoBehaviour
     // Checks if provided template has the needed Crosser component
     bool IsTemplateValid()
     {
-        return template.GetComponent<Crosser>() != null;
+        return citizenTemplate.GetComponent<Crosser>() != null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.DrawWireDisc(transform.position + lengthAlongSidewalk * transform.right, transform.up, lengthAcrossSidewalk * 0.5f);
+        UnityEditor.Handles.DrawWireDisc(transform.position - lengthAlongSidewalk * transform.right, transform.up, lengthAcrossSidewalk * 0.5f);
+        Gizmos.DrawLine(transform.position - lengthAlongSidewalk * transform.right + lengthAcrossSidewalk * transform.forward * 0.5f, transform.position + lengthAlongSidewalk * transform.right + lengthAcrossSidewalk * transform.forward * 0.5f);
+        Gizmos.DrawLine(transform.position - lengthAlongSidewalk * transform.right - lengthAcrossSidewalk * transform.forward * 0.5f, transform.position + lengthAlongSidewalk * transform.right - lengthAcrossSidewalk * transform.forward * 0.5f);
     }
 }

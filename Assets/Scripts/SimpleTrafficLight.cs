@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class SimpleTrafficLight : MonoBehaviour
@@ -7,6 +7,7 @@ public class SimpleTrafficLight : MonoBehaviour
     public float greenTime = 5f;
     public float yellowTime = 2f;
     public float redTime = 5f;
+    public ColorState startWith;
 
     public enum ColorState { green, yellow, red };
 
@@ -16,8 +17,8 @@ public class SimpleTrafficLight : MonoBehaviour
 
     void Start()
     {
+        _currentState = (ColorState)(((int)startWith + 2) % 3);
         StartCoroutine("ColorTimer");
-        TurnRed();
     }
 
     void TurnGreen()

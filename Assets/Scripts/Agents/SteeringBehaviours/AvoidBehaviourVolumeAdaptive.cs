@@ -13,6 +13,7 @@ public class AvoidBehaviourVolumeAdaptive : SteeringBehaviour
 	public float steer = 7f;
 
 	public float boxcastVerticalOffset = 0f;
+	public float boxcastForwardOffset = 0f;
 
 	private Vector3 dbgAcceleration;
 
@@ -25,8 +26,8 @@ public class AvoidBehaviourVolumeAdaptive : SteeringBehaviour
 	{
 		Vector3 acceleration = Vector3.zero;
 		Collider collider = GetComponent<Collider> ();
-		Vector3 verticalAdj = transform.position + Vector3.up * boxcastVerticalOffset;
-		bool hit = Physics.BoxCast(verticalAdj,
+		Vector3 positionAdj = transform.position + Vector3.up * boxcastVerticalOffset + Vector3.forward * boxcastForwardOffset;
+		bool hit = Physics.BoxCast(positionAdj,
 											  collider.bounds.extents,
 											  status.direction,
 											  transform.rotation,

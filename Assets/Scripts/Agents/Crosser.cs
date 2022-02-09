@@ -9,7 +9,11 @@ public class Crosser : MonoBehaviour
     public float reactionTime = .2f;            // reaction time of the crosser
     public float waitingDistance = 1.5f;        // min distance for waiting in front of the crossing
     public float arriveDistance = 1f;           // min distance to consider the destination reached
-    public float nearCrossingDistance = 1.5f;   // min distance to consider close to the crossing
+    public float nearCrossingDistance = 1.4f;   // min distance to consider close to the crossing
+
+    public float walkSpeed = 2f;                // maximum linear speed while walking
+    public float hasteSpeed = 2.5f;             // maximum linear speed while hastening
+    public float jogSpeed = 3f;                 // maximum linear speed while jogging
 
     public Transform baseDestination;           // base position to reach
 
@@ -249,7 +253,7 @@ public class Crosser : MonoBehaviour
 
     public void StartWalking()
     {
-        steering.maxLinearSpeed = 2f;
+        steering.maxLinearSpeed = walkSpeed;
         animator.Play("Base Layer.Walking");
         animator.speed = 1f;
         steering.ChangeBehaviourWeight<AvoidBehaviourVolumeAdaptive>(1f);
@@ -257,13 +261,13 @@ public class Crosser : MonoBehaviour
 
     public void StartHastening()
     {
-        steering.maxLinearSpeed = 2.5f;
+        steering.maxLinearSpeed = hasteSpeed;
         animator.speed = 1.25f;
     }
 
     public void StartJogging()
     {
-        steering.maxLinearSpeed = 3f;
+        steering.maxLinearSpeed = jogSpeed;
         animator.Play("Base Layer.Jogging");
         animator.speed = 1f;
     }
@@ -276,7 +280,6 @@ public class Crosser : MonoBehaviour
         steering.ChangeBehaviourWeight<AvoidBehaviourVolumeAdaptive>(0f);
     }
 
-    // TODO implement decision tree
     IEnumerator Wander()
     {
         while (true)

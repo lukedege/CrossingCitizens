@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
 using System;
 
 public class MovementStatus {
@@ -55,31 +52,6 @@ public class Driver {
 			body.MovePosition (body.position + status.direction * tangentDelta);
 		
 		body.MoveRotation (body.rotation * Quaternion.Euler (0f, rotationDelta, 0f));
-	}
-	public static void KinematicSteer(Transform transform, MovementStatus status, Vector3 acceleration,
-										float minV, float maxV, float maxSigma)
-	{
-
-		Vector3 tangentComponent = Vector3.Project(acceleration, status.direction);
-		Vector3 normalComponent = acceleration - tangentComponent;
-
-		float tangentAcc = tangentComponent.magnitude * Vector3.Dot(tangentComponent.normalized, status.direction);
-		Vector3 right = Quaternion.Euler(0f, 90f, 0f) * status.direction.normalized;
-		float rotationAcc = normalComponent.magnitude * Vector3.Dot(normalComponent.normalized, right) * 360f;
-
-		float t = Time.deltaTime;
-
-		float tangentDelta = status.linearSpeed * t + 0.5f * tangentAcc * t * t;
-		float rotationDelta = status.angularSpeed * t + 0.5f * rotationAcc * t * t;
-
-		status.linearSpeed += tangentAcc * t;
-		status.angularSpeed += rotationAcc * t;
-
-		status.linearSpeed = Mathf.Clamp(status.linearSpeed, minV, maxV);
-		status.angularSpeed = Mathf.Clamp(status.angularSpeed, -maxSigma, maxSigma);
-
-		transform.position += status.direction * tangentDelta;
-		transform.rotation *= Quaternion.Euler(0f, rotationDelta, 0f);
 	}
 }
 
